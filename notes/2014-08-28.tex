@@ -1,0 +1,252 @@
+\documentclass[10pt]{article}
+%\input{page}
+\usepackage{fullpage}	% Does about the same as the \input{page}...
+% ^ part of the preprint package...
+
+\input{symbolmac}
+\usepackage{amsmath}
+\usepackage{amssymb}  	% provides Rbb, etc.
+\usepackage{latexsym}  	% provides \Box
+%\usepackage{theorem} \input{proof}
+%\pagestyle{empty}
+\usepackage{graphicx} 	% for inserting graphics.
+%\usepackage{booktabs}	% for fancy tabular environments and stuff
+%\usepackage{subfig}	% for subfigures... 
+%(This breaks Beamer if the patch isn't applied!!)
+%usepackage{hyperref}
+
+
+%% ******** For code: ******************
+%\usepackage{listings}
+%\usepackage[usenames,dvipsnames]{color}
+%% ******** Define the language: *******
+%\lstdefinelanguage{matlabfloz}{%
+%	alsoletter={...},%
+%	morekeywords={% 						% keywords
+%	break,case,catch,continue,elseif,else,end,for,function,global,%
+%	if,otherwise,persistent,return,switch,try,while,...,
+%        classdef,properties,methods},%
+%	comment=[l]\%,% 						% comments
+%	morecomment=[l]...,% 					% comments
+%	morestring=[m]',%   						% strings 
+%}[keywords,comments,strings]%
+%\lstdefinestyle{matlab}{language=matlabfloz,							
+%		keywordstyle=\color[rgb]{0,0,1},					
+%		commentstyle=\color[rgb]{0.133,0.545,0.133},	% comments
+%		stringstyle=\color[rgb]{0.627,0.126,0.941},	% strings
+%		numbersep=3mm, numbers=left, numberstyle=\tiny% number style
+%}
+%% ******** Set the style: **************
+%\lstset{style=matlab}
+
+%\newcommand{\matlab}{{\sc Matlab }} % Or 
+\renewcommand{\matlab}{{\sc Matlab }} 
+
+% \newcommand{\homedir}{/home/aepound}
+% \newcommand{\figdir}{\homedir/figs}  % picture stuff: ps,fig,tex
+%\newtheorem{theorem}{Theorem}
+%\newtheorem{corollary}{Corollary}
+%\newtheorem{lemma}{Lemma}
+
+\title{}
+\author{}
+\date{\today}
+
+
+
+\begin{document}
+\maketitle
+
+%\begin{abstract}
+%\end{abstract}
+
+\section{State Space Representation}
+\begin{align}
+  \xdot(t) &= A(t) x(t) + B(t)u(t)\\
+  y(t)     &= C(t) x(t) + D(t)u(t)
+\end{align}
+
+\subsection{Inverted Pendulum on a Cart}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Insert the diagram here...
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+We can define our coordinates as 
+\begin{equation}
+  q =
+  \begin{bmatrix}
+    z\\ \theta
+  \end{bmatrix}.
+\end{equation}
+We will be doing this using the Lagrangian Method, so we need to find
+out Kinetic and Potential Energies.
+The Kinetic Energy ($T$) is
+\begin{equation}
+  \begin{split}
+  T & = T_{cart} + T_{ball}\\
+  T_{cart} & = \frac{1}{2} M\zdot^2\\
+  T_{ball} & = \frac{1}{2} m\zdot_1^2 + \frac{1}{2} m\zdot_2^2.
+  % Why not use angular velocity?
+  \end{split}
+\end{equation}
+Finding what each of the terms in these equations we get
+\begin{align}
+  z_1 &= z + l\sin(\theta) & z_2 &= l\cos(\theta)\\
+  \zdot_1 &= \zdot + l\cos(\theta)\thetadot & \zdot_2 &=
+  -l\sin(\theta)\thetadot \\
+  \zdot_1^2 &= \zdot^2 + l^2 \cos^2(\theta)\thetadot^2 + 2\zdot l
+  \cos(\theta)\thetadot & \zdot_2^2 &= l^2\sin^2(\theta)\thetadot^2.
+\end{align}
+Thus, we get 
+\begin{equation}
+  T_{ball} = \frac{1}{2}m\left(\zdot^2 + l^2\thetadot^2 +
+    2l\cos(theta)\thetadot \right).
+\end{equation}
+The total Kinetic Energy of the system is then
+\begin{equation}
+  T = \frac{1}{2}\zdot^2 + \frac{1}{2}ml^2\thetadot^2 +
+  ml\zdot\cos(\theta)\thetadot.
+\end{equation}
+The Potential Energy of the system is 
+\begin{equation}
+  V = mgl\cos(\theta).
+\end{equation}
+Putting these together, we get the full Lagrangian
+\begin{equation}
+  L = \frac{1}{2} (M + m)\zdot^2 + \frac{1}{2}ml^2\thetadot^2 +
+  ml\zdot\cos(\theta)\thetadot - mgl\cos(\theta).
+\end{equation}
+
+Now, we need to compute the following:
+\begin{equation}
+  \begin{split}
+    \frac{d}{dt}\left(\partiald{L}{\zdot}\right) -\partiald{L}{z} &=
+    F\\
+    \frac{d}{dt}\left(\partiald{L}{\thetadot}\right)
+    - \partiald{L}{\theta} & = 0. % no external force on the ball..
+  \end{split}
+\end{equation}
+Breaking this down, we get
+\begin{equation}
+  \begin{split}
+    \partiald{L}{\zdot} &= (M+m)\zdot + ml\cos(\theta)\thetadot\\
+    \partiald{L}{z} &= 0\\
+    \partiald{L}{\thetadot} &= \frac{1}{2}ml^2\thetadot +
+    ml\zdot\cos(\theta)\\ 
+    \partiald{L}{\theta} &= -ml\zdot\sin(\theta)\thetadot +
+    mgl\sin(\theta).\\ 
+  \end{split}
+\end{equation}
+Now for the derivatives with respect to time,
+\begin{equation}
+  \frac{d}{dt}\left((M+m)\zdot + ml\cos(\theta)\thetadot\right) =
+  (M+m)\zddot + ml\cos(\theta)\thetaddot. 
+\end{equation}
+This gives rise to the equation
+\begin{equation}
+ (M+m)\zddot + ml\cos(\theta)\thetaddot  - ml\thetadot^2\sin(\theta) = F.
+\end{equation}
+Do the same for the other equation, and you obtain
+\begin{equation}
+  ml\cos(\theta)\zddot + ml^2\thetaddot - mgl\sin(\theta) = 0.
+\end{equation}
+Sticking this into a vector format we obtain the equation
+\begin{equation}
+  \begin{bmatrix}
+    M+m & ml\cos(\theta)\\ ml\cos(\theta) & ml^2
+  \end{bmatrix}
+  \begin{bmatrix}
+    \zddot\\ \thetaddot
+  \end{bmatrix}
+  -
+  \begin{bmatrix}
+    ml\thetadot^2\sin(\theta)\\ mgl\sin(\theta)
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    F \\ 0
+  \end{bmatrix}.
+\end{equation}
+Solving for the state equations yields
+\begin{equation}
+  \begin{bmatrix}
+    \zddot\\ \thetaddot
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    M+m & ml\cos(\theta)\\ ml\cos(\theta) & ml^2
+  \end{bmatrix}^{-1}
+  \left(
+  \begin{bmatrix}
+    ml\thetadot^2\sin(\theta)\\ mgl\sin(\theta)
+  \end{bmatrix}
+  +
+  \begin{bmatrix}
+    F \\ 0
+  \end{bmatrix}
+\right).
+\end{equation}
+
+So if we let out state be
+\begin{equation}
+  x = 
+  \begin{bmatrix}
+    z & \theta & \zdot & \thetadot
+  \end{bmatrix}^T
+\end{equation}
+and we make the small angle approximation of 
+\begin{equation}
+  \begin{split}
+    \cos(\theta) &\approx 1\\
+    \sin(\theta) &\approx \theta \approx 0
+  \end{split},
+\end{equation}
+we get some linearized equations
+\begin{equation}
+  \begin{split}
+    (M+m)\zddot + ml\thetaddot &= F\\
+    ml\zdot + ml^2\thetaddot - mgl\theta &= 0.
+  \end{split}
+\end{equation}
+Solving for our state space equation we get
+\begin{equation}
+  \begin{split}
+    \zddot &= \frac{F}{M} - \frac{mg}{M}\theta\\
+    \thetaddot &= \frac{-F}{ml} + \frac{M+m}{ml}g\theta.
+  \end{split}
+\end{equation}
+Forming this into the standard form, we get
+\begin{equation}
+\begin{split}
+  \xdot &=
+  \begin{bmatrix}
+    0 & 0 & 1 & 0\\
+    0 & 0 & 0 & 1\\
+    0 & \frac{-mg}{m} & 0 & 0\\
+    0 & \frac{M+m}{ml} & 0 & 0\\
+  \end{bmatrix}x + 
+  \begin{bmatrix}
+    0 \\ 0 \\ \frac{1}{M} \\ \frac{-1}{ml}
+  \end{bmatrix}F\\
+  C &= % Usually this is denoted y...
+  \begin{bmatrix}
+    1 &0 &0& 0\\
+    0 &1& 0& 0
+  \end{bmatrix}
+  x.
+\end{split}
+\end{equation}
+\subsection{\matlab Simulation}
+
+Insert diagram***
+
+And maybe add a bit of context and description of what was done... 
+
+
+
+
+% \bibliographystyle{ieeetr}
+% \newcommand{\bibdir}{~}
+% \bibliography{\bibdir/~}
+\end{document}
