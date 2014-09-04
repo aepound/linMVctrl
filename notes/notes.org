@@ -1,7 +1,14 @@
 * [2014-08-26 Tue]
-** Write up the notes for this... TODO 
-
+** DONE Write up the notes for this.
  
 * [2014-08-28 Thu]
-** Notes entered
-** TODO Draw digrams from handwritten notes...
+** DONE Notes entered
+** TODO Draw digrams from handwritten notes.
+
+* [2014-09-02 Tue]
+** TODO Draw diagrams
+** TODO Enter Notes
+
+* [2014-09-04 Thu]
+** TODO Enter Notes
+** TODO Draw Diagrams
