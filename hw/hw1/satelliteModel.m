@@ -166,10 +166,10 @@ function [sys,x0,str,ts,simStateCompliance]=mdlInitializeSizes(P)
 %
 sizes = simsizes;
 
-sizes.NumContStates  = ;
+sizes.NumContStates  = 6;
 sizes.NumDiscStates  = 0;
-sizes.NumOutputs     = ;
-sizes.NumInputs      = ;
+sizes.NumOutputs     = 6;
+sizes.NumInputs      = 3;
 sizes.DirFeedthrough = 1;
 sizes.NumSampleTimes = 1;   % at least one sample time is needed
 
@@ -178,7 +178,7 @@ sys = simsizes(sizes);
 %
 % initialize the initial conditions
 %
-x0  = ;
+x0  = P.x0;
 
 %
 % str is always an empty matrix
@@ -218,13 +218,13 @@ utheta=u(2);
 uphi=u(3);
 m=P.m;
 k=P.k;
-xdot(1)=;
-xdot(2)=;
-xdot(3=;
-xdot(4)=;
-xdot(5)=;
-xdot(6)=;
-
+xdot(1)=rdot;
+xdot(2)=r*phidot^2 + r*(cos(phi))^2*thetadot^2 - k/r^2 + ur/m;
+xdot(3)=thetadot;
+xdot(4)=-2*rdot/r*phidot - cos(phi)*sin(phi)*thetadot^2 + uphi/m/r^2;
+xdot(5)=phidot;
+xdot(6)=2*sin(phi)*phidot*thetadot + utheta/m/r^2/(cos(phi))^2;
+sys = xdot;
 
 % end mdlDerivatives
 
@@ -249,7 +249,7 @@ sys = [];
 %
 function sys=mdlOutputs(t,x,u,P)
 
-sys =;
+sys = x;
 
 % end mdlOutputs
 
