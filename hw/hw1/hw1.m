@@ -62,6 +62,132 @@ equations of motion.
 \label{fig:1}
 \end{figure}
 
+\subsection{Working the problem}
+We will choose the generalized coordinates $q =
+\begin{bmatrix}
+  r & \phi & \theta
+\end{bmatrix}^T$.  Using these coordinates, we know that the velocity
+is given by 
+\begin{equation}
+  v =
+  \begin{bmatrix}
+    \rdot\\ r\phidot \\ r\cos(\phi)\thetadot
+  \end{bmatrix}.
+\end{equation}
+Utilizing this we can readily calculate the Kinetic energy of the
+system as
+\begin{equation}
+  \begin{split}
+    T & = \frac{1}{2}mv^Tv\\
+    &= \frac{1}{2}m \left(\rdot^2 + r^2\phidot^2 +
+      r^2\cos^2(\phi)\thetadot^2\right).
+  \end{split}
+\end{equation}
+Likewise, the potential energy is easily calculated as
+\begin{equation}
+  V = -\frac{GMm}{r}.
+\end{equation}
+Thus, the Lagrangian is given as
+\begin{equation}
+  \begin{split}
+    L &= T - V\\
+    & = \frac{1}{2}m \left(\rdot^2 + r^2\phidot^2 +
+      r^2\cos^2(\phi)\thetadot^2\right) +\frac{GMm}{r}.
+  \end{split}
+\end{equation}
+Then, to find the equations of motion,
+we now need to calculate the derivatives to find the equations of
+motion from the equations
+\begin{equation}
+  \frac{d}{dt}\left(\partiald{L}{\zdot_i}\right) - \partiald{L}{z_i} =
+  F \quad \forall \;\; i.
+\end{equation}
+
+\paragraph{In the $r$-direction}
+\begin{equation}
+  \partiald{L}{\rdot} = \frac{2}{2}m\rdot
+\end{equation}
+\begin{equation}
+  \frac{d}{dt}\left(\partiald{L}{\rdot}\right) = m\ddot{r}
+\end{equation}
+\begin{equation}
+  \partiald{L}{r} = mr\phidot^2 + mr\cos^2(\phi)\thetadot^2 - \frac{GMm}{r^2}.
+\end{equation}
+Thus we get the equation
+\begin{equation}
+  m\ddot{r} - mr\phidot^2 - mr\cos^2(\phi)\thetadot^2 +
+  \frac{GMm}{r^2} = u_r.
+\end{equation}
+\begin{equation}
+  \ddot{r} = r\phidot^2 + r\cos^2(\phi)\thetadot^2 - \frac{GM}{r^2} +
+  \frac{u_r}{m}
+\end{equation}
+
+\paragraph{In the $\phi$-direction}
+\begin{equation}
+  \partiald{L}{\phidot} = \frac{2}{2}mr^2\phidot
+\end{equation}
+\begin{equation}
+  \frac{d}{dt}\left(\partiald{L}{\phidot}\right) =
+  2mr\rdot\phidot + mr^2\ddot{\phi}
+\end{equation}
+\begin{equation}
+  \partiald{L}{\phi} = -\frac{2}{2}mr^2\cos(\phi)\sin(\phi)\thetadot^2
+\end{equation}
+Thus, we get the equation
+\begin{equation}
+  mr^2\ddot{\phi} + 2mr\rdot\phidot +
+  mr^2\cos(\phi)\sin(\phi)\thetadot^2 = u_\phi.
+\end{equation}
+\begin{equation}
+    \ddot{\phi}  = 
+    - 2\frac{\rdot}{r}\phidot 
+    - \cos(\phi)\sin(\phi)\thetadot^2 
+    + \frac{u_\phi}{mr^2}
+\end{equation}
+
+\paragraph{In the $\theta$-direction}
+\begin{equation}
+  \partiald{L}{\thetadot} = \frac{2}{2}mr^2\cos^2(\phi)\thetadot
+\end{equation}
+\begin{equation}
+  \frac{d}{dt}\left(\partiald{L}{\thetadot}\right) = 
+  2mr\rdot\cos^2(\phi)\thetadot -
+  2mr^2\cos(\phi)\sin(\phi)\phidot\thetadot + 
+  mr^2\cos^2(\phi)\thetaddot
+\end{equation}
+\begin{equation}
+  \partiald{L}{\theta} = 0
+\end{equation}
+Thus, we get the equation
+\begin{equation}
+  mr^2\cos^2(\phi)\thetaddot + 
+  2mr\rdot\cos^2(\phi)\thetadot -
+  2mr^2\cos(\phi)\sin(\phi)\phidot\thetadot  
+  = u_\theta
+\end{equation}
+\begin{equation}
+  \thetaddot = 
+  2\sin(\phi)\phidot\thetadot 
+  -2\frac{\rdot}{r}\thetadot 
++ \frac{u_\theta}{mr^2\cos^2(\phi)}
+\end{equation}
+
+\paragraph{Full equations of motion}
+\begin{equation}
+  \begin{split}
+  \ddot{r} &= r\phidot^2 + r\cos^2(\phi)\thetadot^2 - \frac{GM}{r^2} + 
+  \frac{u_r}{m}\\
+    \ddot{\phi}  &= 
+    - 2\frac{\rdot}{r}\phidot 
+    - \cos(\phi)\sin(\phi)\thetadot^2 
+    + \frac{u_\phi}{mr^2}\\
+  \thetaddot & = 
+  2\sin(\phi)\phidot\thetadot 
+  -2\frac{\rdot}{r}\thetadot 
++ \frac{u_\theta}{mr^2\cos^2(\phi)}
+  \end{split}
+\end{equation}
 
 \section{Problem 2}
 
