@@ -10,6 +10,30 @@
 %\newenvironment{matlabv}{\verbatim}{\endverbatim}
 %\newenvironment{octavev}{\verbatim}{\endverbatim}
 
+
+% ******** For code: ******************
+\usepackage{listings}
+%\usepackage[usenames,dvipsnames]{color}
+% ******** Define the language: *******
+\lstdefinelanguage{matlabfloz}{%
+	alsoletter={...},%
+	morekeywords={% 						% keywords
+	break,case,catch,continue,elseif,else,end,for,function,global,%
+	if,otherwise,persistent,return,switch,try,while,...,
+        classdef,properties,methods},%
+	comment=[l]\%,% 						% comments
+	morecomment=[l]...,% 					% comments
+	morestring=[m]',%   						% strings 
+}[keywords,comments,strings]%
+\lstdefinestyle{matlab}{language=matlabfloz,							
+		keywordstyle=\color[rgb]{0,0,1},					
+		commentstyle=\color[rgb]{0.133,0.545,0.133},	% comments
+		stringstyle=\color[rgb]{0.627,0.126,0.941},	% strings
+		numbersep=3mm, numbers=left, numberstyle=\tiny% number style
+}
+% ******** Set the style: **************
+\lstset{style=matlab}
+
 \begin{matlabc}
 %}
 % Start some Matlabe startup stuffs:
@@ -57,7 +81,19 @@ equations of motion.
 % Can I include the figure in any manner?
 \begin{figure}[h!]
 \centering
-{\Large Insert Picture}
+%{\Large Insert Picture}
+ \begin{tikzpicture}[domain=0:4]
+      \draw[very thin,color=gray] (-0.1,-1.1) grid (3.9,3.9);
+      \draw[->] (-0.2,0) -- (4.2,0) ;
+      \draw[->] (0,-0.2) -- (0,4.2) ;
+      \draw[->] (0.2,0.2) -- (-2, -2); 
+      \draw[color=red] (0,0) -- (2,2);
+      \draw[color=red,dashed] (2,2) -- (2,-1) node (v1) {} -- (0,0);
+%      \draw[color=blue] plot (\x,{sin(\x r)}) node[right] {$f(x) = \sin x$};
+%      \draw[color=orange] plot (\x,{0.05*exp(\x)}) node[right] {$f(x) = \frac{1}{20} \mathrm e^x$};
+     % \draw (0.9397,-0.342) arc (-19.9988:-140:1);
+%\draw (1.5,-1.3301) arc (-59.9998:-120:5);
+\end{tikzpicture}
 \caption{Satellite figure}
 \label{fig:1}
 \end{figure}
@@ -219,6 +255,73 @@ of the folder should (\emph{satelliteLastnameofStudent.zip}). Example
 \item Show your working simulation to TA.
 \end{itemize}
 
+\subsection{Solution}
+I was able to get the model coded up correctly with the right parameters. 
+The relevant lines of code are:
+
+{\singlespace
+\lstinputlisting[firstline=208,lastline=228,firstnumber=208]{satelliteModel.m}
+}
+
+In addition to the lines above, We also needed to modify the file 
+\emph{polar2cart.m}.  The contents of that file are reproduced below.
+
+{\singlespace
+\lstinputlisting{polar2cart.m}
+}
+
+I had some difficulties in getting the simulation to work.  Some of it was
+ that the simulation was built in a newer \matlab thatn I had on my 
+machine.  I had to go and use a computer in a lab in order to get it to 
+work.  Also, I ended up outputing the timeseries data from the model (the 
+data that was passed into the \emph{drawSpacecraft} routine) in order to 
+plot it myself.  I never did figure out how to speed up the stepping of 
+the simulation, thus my simulation took about 40 mins to complete one 
+revolution. 
+
+I also did not know how to make the movie.  So, I opted to output the time 
+series and plot it myself after the fact.  I hope that this is satisfactory 
+enough.  Below is the code to plot the timeseries data output from the 
+simulation.  The plot produced is shown in Figure \ref{fig:results}.
+
+{\singlespacing
+\begin{lstlisting}
+%}
+
+% Setup up the same parameters:
+param
+
+% Load in the data from the simulation
+load output.mat
+d = simout.data;
+d = d(1:100:end,:);
+
+% Set the radius of the Earth
+R = P.r0 - 1500;
+[xs,ys,zs] =  sphere;
+
+
+f1 = figure;
+% Plot the Earth
+surf(R*xs,R*ys,R*zs)
+hold on
+% Plot the trajectory of the Satellite:
+plot3(d(:,1),d(:,2),d(:,3),'linewidth',2)
+grid on
+
+% Output to .eps and .pdf:
+print(f1, '-depsc2', 'orbit.eps')
+system('ps2pdf -dEPSCrop orbit.eps')
+
+%{
+\end{lstlisting}}
+\begin{figure}
+\centering
+\includegraphics[width=.75\linewidth]{orbit}
+\caption{The orbit that was output from the simulation.}
+\label{fig:results}
+\end{figure}
+
 
 \section{Problem 3}
 
@@ -232,7 +335,19 @@ $\theta_2$ very small.
 % Figure ?
 \begin{figure}[h!]
 \centering
-{\Large Insert picture}
+%{\Large Insert picture}
+\begin{tikzpicture}[domain=0:4]
+     
+      
+      \draw [thick](-3,3) -- (3,3);
+      \draw (0,3) -- (1,1) -- (2,0);
+      \draw (0,3) -- (0,1.5);
+      \draw (1,1) -- (1, 0);
+    \draw (0,1.750304) arc (-79.9998:-65:2);
+    \draw (1,0.0152) arc (-80.0026:-40:1);
+    \node at (0.37,1.6) {$\theta_1$};
+    \node at (1.5,-0.1) {$\theta_2$};
+\end{tikzpicture}
 \caption{Satellite figure}
 \label{fig:3}
 \end{figure}
