@@ -168,7 +168,7 @@ sizes = simsizes;
 
 sizes.NumContStates  = 6;
 sizes.NumDiscStates  = 0;
-sizes.NumOutputs     = 6;
+sizes.NumOutputs     = 3;
 sizes.NumInputs      = 3;
 sizes.DirFeedthrough = 1;
 sizes.NumSampleTimes = 1;   % at least one sample time is needed
@@ -221,10 +221,12 @@ k=P.k;
 xdot(1)=rdot;
 xdot(2)=r*phidot^2 + r*(cos(phi))^2*thetadot^2 - k/r^2 + ur/m;
 xdot(3)=thetadot;
-xdot(4)=-2*rdot/r*phidot - cos(phi)*sin(phi)*thetadot^2 + uphi/m/r^2;
+xdot(4)=2*sin(phi)*phidot*thetadot/cos(phi) -2*rdot*thetadot/r ...
+        + utheta/(m*r*cos(phi));
 xdot(5)=phidot;
-xdot(6)=2*sin(phi)*phidot*thetadot + utheta/m/r^2/(cos(phi))^2;
-sys = xdot;
+xdot(6)=-2*rdot*phidot/r - cos(phi)*sin(phi)*thetadot^2 + uphi/(m*r);
+%sys = xdot;
+
 
 % end mdlDerivatives
 
@@ -249,7 +251,7 @@ sys = [];
 %
 function sys=mdlOutputs(t,x,u,P)
 
-sys = x;
+sys = x[x(1:2:end)];
 
 % end mdlOutputs
 

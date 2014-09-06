@@ -5,6 +5,6 @@ function X=polar2cart(uu)
 phi=uu(3);
 
 X=zeros(3,1);
-X(1)=;
-X(2)=;
-X(3)=;
+X(1)=r*sin(theta)*cos(phi);
+X(2)=r*cos(theta)*cos(phi);
+X(3)=r*sin(phi);

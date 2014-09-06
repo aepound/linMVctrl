@@ -137,13 +137,13 @@ Thus we get the equation
 Thus, we get the equation
 \begin{equation}
   mr^2\ddot{\phi} + 2mr\rdot\phidot +
-  mr^2\cos(\phi)\sin(\phi)\thetadot^2 = u_\phi.
+  mr^2\cos(\phi)\sin(\phi)\thetadot^2 = ru_\phi.
 \end{equation}
 \begin{equation}
     \ddot{\phi}  = 
     - 2\frac{\rdot}{r}\phidot 
     - \cos(\phi)\sin(\phi)\thetadot^2 
-    + \frac{u_\phi}{mr^2}
+    + \frac{u_\phi}{mr}
 \end{equation}
 
 \paragraph{In the $\theta$-direction}
@@ -164,13 +164,13 @@ Thus, we get the equation
   mr^2\cos^2(\phi)\thetaddot + 
   2mr\rdot\cos^2(\phi)\thetadot -
   2mr^2\cos(\phi)\sin(\phi)\phidot\thetadot  
-  = u_\theta
+  = r\cos(\phi)u_\theta
 \end{equation}
 \begin{equation}
   \thetaddot = 
-  2\sin(\phi)\phidot\thetadot 
+  2\frac{\sin(\phi)}{\cos(\phi)}\phidot\thetadot 
   -2\frac{\rdot}{r}\thetadot 
-+ \frac{u_\theta}{mr^2\cos^2(\phi)}
++ \frac{u_\theta}{mr\cos(\phi)}
 \end{equation}
 
 \paragraph{Full equations of motion}
@@ -181,11 +181,11 @@ Thus, we get the equation
     \ddot{\phi}  &= 
     - 2\frac{\rdot}{r}\phidot 
     - \cos(\phi)\sin(\phi)\thetadot^2 
-    + \frac{u_\phi}{mr^2}\\
+    + \frac{u_\phi}{mr}\\
   \thetaddot & = 
-  2\sin(\phi)\phidot\thetadot 
+  2\frac{\sin(\phi)}{\cos(\phi)}\phidot\thetadot 
   -2\frac{\rdot}{r}\thetadot 
-+ \frac{u_\theta}{mr^2\cos^2(\phi)}
++ \frac{u_\theta}{mr\cos(\phi)}
   \end{split}
 \end{equation}
 
