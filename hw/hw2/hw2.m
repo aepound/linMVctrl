@@ -105,9 +105,9 @@ A UAV flying in plane and constant altitude has linear velocity $v$
 and angular velocity $\omega$ can be modeled by the nonlinear system 
 \begin{equation*}
   \begin{split}
-    \pdot_x = v \cos \theta,\\    
-    \pdot_y = v \sin \theta,\\
-    \thetadot=\omega
+    \pdot_x &= v \cos \theta,\\    
+    \pdot_y &= v \sin \theta,\\
+    \thetadot&=\omega
   \end{split}
 \end{equation*}
 where $(p_x , p_y )$ denote the position of UAV in the horizontal
@@ -119,7 +119,7 @@ input $u := \left[\begin{smallmatrix}v&
 Construct a state-space model for this system with state
 \begin{equation}
   \begin{bmatrix}
-    x1\\  x2\\x3
+    x_1\\  x_2\\ x_3
   \end{bmatrix}= 
   \begin{bmatrix}
     p_x \cos \theta + (p_y - 1) \sin \theta\\
@@ -129,8 +129,8 @@ Construct a state-space model for this system with state
 \end{equation}
 and output $y = \left[x_1 x_2 \right]^T \in \Rbb^2$.
 \item 
-Compute a local linearization for this system around the equilib-
-rium point $x^{eq} = 0$ and $u^{eq} = \theta$.
+Compute a local linearization for this system around the equilibrium
+point $x^{eq} = 0$ and $u^{eq} = \theta$. 
 \item 
 Show that $\omega(t) = v(t) = 1$, $p_x (t) = \sin t$, $p_y = 1 - \cos t$, and
 $\theta(t) = t, \forall \: t \ge 0$ is a solution to the system.
