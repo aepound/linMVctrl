@@ -506,8 +506,9 @@ Design a feedback linearization controller (after feedback
 linearization use a simple PID controller) to derive the pendulum to
 the up right position. Use the following values for the parameters: 
 $l = 1m, m = 1kg, b = 0.1N m^{-1} s^{-1}$, and $g =9.8ms^{-2}$. Modify
-Inverted Pendulum.zip to show that your controller works. Remember
-that the Inverted Pendulum.zip is a simulation for a inverted pendulum
+\emph{InvertedPendulum.zip} to show that your controller works. Remember
+that the \emph{InvertedPendulum.zip} is a simulation for a inverted
+pendulum 
 on a cart and you can still use it for a inverted pendulum by just
 giving zero input to the cart. You can also create your own simulator
 in Matlab-Simulink to show your work.  
@@ -515,9 +516,10 @@ in Matlab-Simulink to show your work.
 Assume now that the pendulum is mounted on a cart and that
 you can control the cart's jerk, which is the derivative of its ac-
 celeration $a$. In this case,
-$T = -mla cos \theta, a = u$. Design the feedback linearization con-
-troller for the new system.Show your work in using Inverted Pen-
-dulum.zip (use parameters in param.m).
+$T = -mla \cos(\theta), a = u$. Design the feedback linearization con-
+troller for the new system.Show your work in using 
+\emph{InvertedPendulum.zip} (use parameters in 
+\emph{param.m}).
 \end{enumerate}
 
 \end{document}
