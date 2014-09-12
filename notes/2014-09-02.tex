@@ -42,6 +42,8 @@
 %\newcommand{\matlab}{{\sc Matlab }} % Or 
 \renewcommand{\matlab}{{\sc Matlab }} 
 
+\providecommand{\norm}[1]{\lVert#1\rVert}
+
 % \newcommand{\homedir}{/home/aepound}
 % \newcommand{\figdir}{\homedir/figs}  % picture stuff: ps,fig,tex
 %\newtheorem{theorem}{Theorem}
@@ -133,6 +135,257 @@ Thus, we will look at distrubing it from the equilibrium point.  Let
   \end{split}
 \end{equation}
 
+\newcommand{\meq}[1]{#1^{eq}}
 
+Ok, let $u(t) = \meq{u} + \delta u$.
+\begin{equation}
+  \begin{split}
+    \delta y &= y(t) - \meq{y} \\ 
+    &= g(x,u) - g(\meq{x},\meq{u})\\
+    &= g(\meq{x}+\delta x,\meq{u}+ \delta u) - g(\meq{x},\meq{u}).
+  \end{split}
+\end{equation}
+We can do a series expansion to get
+\begin{equation}\label{eq:delty}
+\delta y =
+\underbrace{\partiald{g(\meq{x},\meq{u})}{x}}_{\text{Jacobian $(m
+    \times n)$}}\delta x +
+\partiald{g(\meq{x},\meq{u})}{u}\delta u + O(\norm{\delta x}^2) +
+O(\norm{\delta u}^2),
+\end{equation}
 
+Note: This is analysis is not a state space analysis now.  It is a
+deviation dynamics problem.  We are now looking at deviations and
+perturbations around the equilibrium point, \emph{NOT} states,
+anymore. 
+
+The Jacobian is defined as 
+\begin{equation}
+  \partiald{g}{x} = \left[ \left(\partiald{g_i}{x_j}\right)_{ij}\right].
+\end{equation}
+
+Just like equation \ref{eq:delty}, we can do the same analysis on the
+state equation
+\begin{equation}
+\delta y =
+\underbrace{\partiald{f(\meq{x},\meq{u})}{x}}_{\text{Jacobian $(m
+    \times n)$}}\delta x +
+\partiald{f(\meq{x},\meq{u})}{u}\delta u + HOT,
+\end{equation}
+where $HOT$ refers to ``Higher Order Terms.'' 
+
+Thus, local linearization around an equilibrium point gives a LTI
+system. Because you are around an quilibrium point, the system doesn't
+want to move.
+
+So the linearized system ends up being
+\begin{equation}
+  \begin{split}
+    \dot{\delta x} &= A \delta x + B \delta u\\
+    \delta y &= C\delta x + D \delta u,
+  \end{split}
+\end{equation}
+where
+\begin{align}
+  A &= \left.\partiald{f}{x}\right|_{(\meq{x},\meq{u}} & 
+  B &= \left.\partiald{f}{u}\right|_{(\meq{x},\meq{u}} & 
+  C &= \left.\partiald{g}{x}\right|_{(\meq{x},\meq{u}} & 
+  D &= \left.\partiald{g}{u}\right|_{(\meq{x},\meq{u}}.
+\end{align}
+
+\subsection{Example: Inverted Pendulum}
+
+\begin{figure}
+  \centering
+  {\Large Insert Digram here}
+  \caption{Inverted pendulum}
+\end{figure}
+
+\begin{equation}
+  \xdot =
+  \begin{bmatrix}
+    \thetadot \\ \thetaddot
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    \thetaddot \\ 
+    \frac{g}{l}\sin\theta - \frac{b}{ml^2}\thetadot + \frac{u}{ml^2}
+  \end{bmatrix}
+\end{equation}
+Let's linearize this arounf the equilibrium point $ \xdot =
+\left[\begin{smallmatrix}
+  0 & 0 
+\end{smallmatrix}\right]^T$.
+Let 
+\begin{align}
+  \meq{x} &=
+\begin{bmatrix}
+  0 \\ 0 
+\end{bmatrix} & \meq{u} &= 0 & \meq{\theta} &= 0\,(\text{or } \pi)
+& \meq{\thetadot} & = 0.
+\end{align}
+Then we get
+\begin{align}
+  A &=\left[
+  \begin{matrix}
+    0 & 1 \\ \frac{g}{l}\cos(\theta) & \frac{-b}{ml^2}
+  \end{matrix}\right|_{\meq{x},\meq{u}} &
+  B &=
+  \begin{bmatrix}
+    0 \\ \frac{1}{ml^2}
+  \end{bmatrix}&
+  C &=\left[
+  \begin{matrix}
+    2 \\ 2\thetadot
+  \end{matrix}\right|_{\meq{x},\meq{u}} &
+  D &= \left[ 0 \right]
+\end{align}
+
+\section{\emph{Local} Linearization along a trajectory}
+
+\newcommand{\sol}[1]{#1^{sol}}
+
+\begin{figure}
+  \centering
+  {\Large Insert figure here}
+  \caption{A trajectory}
+\end{figure}
+We want to linearize along each point on the trajectory.
+So, given a solution of $\xdot = f(x,u)$,
+\begin{equation}
+  \begin{split}
+    u^{sol} &: [0,\infinity) \rightarrow \mathbb{R}^k\\
+    x^{sol} &: [0,\infinity) \rightarrow \mathbb{R}^n\\
+    y^{sol} &: [0,\infinity) \rightarrow \mathbb{R}^m\\
+  \end{split}
+\end{equation}
+these give a set of points along the trajectory.  We can write a
+system,
+\begin{equation}
+  \begin{split}
+    \dot{\delta x} &= A \delta x + B \delta u\\
+    \delta y &= C\delta x + D \delta u,
+  \end{split}
+\end{equation},
+where
+\begin{align}
+  A &= \left.\partiald{f}{x}\right|_{(\sol{x},\sol{u}} & 
+  B &= \left.\partiald{f}{u}\right|_{(\sol{x},\sol{u}} & 
+  C &= \left.\partiald{g}{x}\right|_{(\sol{x},\sol{u}} & 
+  D &= \left.\partiald{g}{u}\right|_{(\sol{x},\sol{u}}.
+\end{align}
+
+\subsection{Example: Satellite}
+\begin{figure}
+  \centering
+  {\Large Insert Figure Here}
+  \caption{Satellite Digram}
+\end{figure}
+Define our states
+\begin{align}
+  x &=
+  \begin{bmatrix}
+    r \\ \rdot \\ \theta \\ \thetadot \\ \phi \\ \dot{\phi}
+  \end{bmatrix}
+  & u &=
+  \begin{bmatrix}
+    u_r \\ u_\theta \\ u_\phi
+  \end{bmatrix}
+  & y &=
+  \begin{bmatrix}
+    r \\ \theta \\ \phi
+  \end{bmatrix}
+\end{align}
+Our equation of motion is given as
+\begin{equation}
+  \xdot = f(x,u) =
+  \begin{bmatrix}
+    \rdot \\
+    r\thetadot^2\cos^2\phi + r \dot{\phi}^2 - \frac{k}{r^2} +
+    \frac{u_r}{m}\\
+    \thetadot \\
+    -2\frac{\rdot\theta}{r} + 2\thetadot\phidot\tan(\theta) +
+      \frac{u_\theta}{mr\cos\phi} \\
+    \dot{\phi}\\
+    -\thetadot^2\cos\phi \sin\phi - 2\frac{r\dot{\phi}}{r} +
+    \frac{u_\phi}{mr} \\
+  \end{bmatrix}.
+\end{equation}
+(in the horizontal plane);
+\begin{equation}
+  x_0 =
+  \begin{bmatrix}
+    r_0 & 0 & \omega_0 t & \omega_0 & 0 & 0
+  \end{bmatrix}^T
+\end{equation}
+and 
+\begin{equation}
+  u_0 =
+  \begin{bmatrix}
+    0 & 0 & 0
+  \end{bmatrix}^T
+\end{equation}
+We then get the system:
+\begin{equation}
+  \begin{split}
+    \dot{\delta x} &= A \delta x + B \delta u\\
+    \delta y &= C\delta x + D \delta u,
+  \end{split}
+\end{equation},
+where
+\begin{align}
+  A &= \left.\partiald{f}{x}\right|_{(\sol{x},\sol{u}} =
+  \begin{bmatrix}
+    0& 1& 0& 0& 0& 0\\
+    (\dot{\phi}^2\cos^2\phi + \thetadot^2 + 2\frac{k}{r^3} +
+    \frac{u}{m} & 0& 0& 2r\thetadot\cos^2\phi & \dots & \dots\\
+    \vdots& &\ddots & & & 
+  \end{bmatrix}
+\\ 
+  B &= \left.\partiald{f}{u}\right|_{(\sol{x},\sol{u}} = 
+  \begin{bmatrix}
+   0 &0&0 \\ 
+   \frac{1}{m} &0 &0 \\
+   0 &0 &0 \\
+   0 &\frac{1}{mr_0} &0 \\
+   0 &0 &0 \\
+   0 &0 & \frac{1}{mr_0}
+  \end{bmatrix} \\
+  C &= \left.\partiald{g}{x}\right|_{(\sol{x},\sol{u}} = 
+  \begin{bmatrix}
+   1 &0 &0 &0 &0 &0 \\
+   0 &0 &1 &0 &0 &0 \\
+   0 &0 &0 &0 &1 &0 \\
+  \end{bmatrix}\\
+  D &= \left.\partiald{g}{u}\right|_{(\sol{x},\sol{u}} = 0.
+\end{align}
+
+\section{Feedback Linearization}
+\begin{equation}
+  M(q)\ddot{q}B(q,\qdot) + G(q) = F
+\end{equation}
+where $F$ is the control input, and $q$ and $\qdot$ can be measured.
+Then, 
+\begin{equation}
+  \ddot{q}M(q)^{-1} \left(- B(q,\qdot) - G(q) + F\right).
+\end{equation}
+So divide the input control into
+\begin{equation}
+  F = u_{nl}(q,\qdot) + u_{lin}.
+\end{equation}
+Then we see the division
+\begin{equation}
+  M(q)\ddot{q} + \underbrace{B(q,\qdot) + G(q)}_{\text{nonlinear}} =
+  u_{nl}(q,\qdot) + u_{lin}. 
+\end{equation}
+If we let $U_{nl} = B(q,\qdot) +G(q)$, then 
+\begin{equation}
+\begin{split}
+  M(q)\ddot{q}& = u_{lin} \\
+  & = -k_p(q-q_d) - k_d(\qdot - \qdot_d).
+\end{split}
+\end{equation}
+We can only cancel, if we know our states and can measure them.
+Also, $u_{nl}$, may be large (and possibly not useful; i.e. too large
+to actuate or use in a motor, etc.)
 \end{document}

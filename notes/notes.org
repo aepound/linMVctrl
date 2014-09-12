@@ -6,9 +6,15 @@
 ** TODO Draw digrams from handwritten notes.
 
 * [2014-09-02 Tue]
-** TODO Draw diagrams -- started.
+** DONE Draw diagrams
 ** TODO Enter Notes
 
 * [2014-09-04 Thu]
+** TODO Enter Notes
+** TODO Draw Diagrams
+* [2014-09-09 Tue]
+** TODO Enter Notes
+** TODO Draw Digrams
+* [2014-09-11 Thu]
 ** TODO Enter Notes
 ** TODO Draw Diagrams

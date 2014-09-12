@@ -1,0 +1,138 @@
+\documentclass[10pt]{article}
+%\input{page}
+\usepackage{fullpage}	% Does about the same as the \input{page}...
+% ^ part of the preprint package...
+
+\input{symbolmac}
+\usepackage{amsmath}
+\usepackage{amssymb}  	% provides Rbb, etc.
+\usepackage{latexsym}  	% provides \Box
+%\usepackage{theorem} \input{proof}
+%\pagestyle{empty}
+\usepackage{graphicx} 	% for inserting graphics.
+%\usepackage{booktabs}	% for fancy tabular environments and stuff
+%\usepackage{subfig}	% for subfigures... 
+%(This breaks Beamer if the patch isn't applied!!)
+%usepackage{hyperref}
+
+
+%% ******** For code: ******************
+%\usepackage{listings}
+%\usepackage[usenames,dvipsnames]{color}
+%% ******** Define the language: *******
+%\lstdefinelanguage{matlabfloz}{%
+%	alsoletter={...},%
+%	morekeywords={% 						% keywords
+%	break,case,catch,continue,elseif,else,end,for,function,global,%
+%	if,otherwise,persistent,return,switch,try,while,...,
+%        classdef,properties,methods},%
+%	comment=[l]\%,% 						% comments
+%	morecomment=[l]...,% 					% comments
+%	morestring=[m]',%   						% strings 
+%}[keywords,comments,strings]%
+%\lstdefinestyle{matlab}{language=matlabfloz,							
+%		keywordstyle=\color[rgb]{0,0,1},					
+%		commentstyle=\color[rgb]{0.133,0.545,0.133},	% comments
+%		stringstyle=\color[rgb]{0.627,0.126,0.941},	% strings
+%		numbersep=3mm, numbers=left, numberstyle=\tiny% number style
+%}
+%% ******** Set the style: **************
+%\lstset{style=matlab}
+
+%\newcommand{\matlab}{{\sc Matlab }} % Or 
+\renewcommand{\matlab}{{\sc Matlab }} 
+
+% \newcommand{\homedir}{/home/aepound}
+% \newcommand{\figdir}{\homedir/figs}  % picture stuff: ps,fig,tex
+%\newtheorem{theorem}{Theorem}
+%\newtheorem{corollary}{Corollary}
+%\newtheorem{lemma}{Lemma}
+
+\title{}
+\author{}
+\date{Sept. 2, 2014}
+
+
+
+\begin{document}
+\maketitle
+
+%\begin{abstract}
+%\end{abstract}
+The things that we will be going over today:
+\begin{enumerate}
+\item State space of nonlinear systems
+\item \emph{Local} linearization around an equilibrium point
+\item \emph{local} linearization around a trajectory
+\item Feedback linearization
+\end{enumerate}
+
+Side note: From last time, the small angle approximation \emph{should}
+be:
+\begin{equation}
+  \begin{split}
+    \thetadot &\approx 0\\
+    \sin(\theta) & \approx \theta\\
+    \cos(\theta) & \approx 1
+  \end{split}
+\end{equation}
+
+\section{State Space of Nonlinear Systems}
+
+State is denoted as $x \in \Rbb^n$.
+Input is denoted as $u \in \Rbb^k$.
+Output is denoted as $y \in \Rbb^m$.
+
+The state space equations are 
+\begin{align}
+  \xdot(t) &= f(x,u)\\
+  y(t)     &= g(x,u)
+\end{align}
+
+\subsection{Example: Inverted Pendulum}
+
+The equations of motion of an inverted pendulum are:
+\begin{equation}
+  ml^2\thetaddot = mgl\sin(\theta) - b\thetadot + T,
+\end{equation}
+where $b$ is a coefficient of friction and $T$ is the input torque.
+Letting $x =
+\begin{bmatrix}
+  \theta & \thetadot
+\end{bmatrix}^T$, then we get the equation
+\begin{equation}
+  \xdot =
+  \begin{bmatrix}
+    \thetadot\\ \thetaddot
+  \end{bmatrix} = f(x,u) = 
+  \begin{bmatrix}
+    \thetadot\\ \frac{g}{l}\sin(\theta) - \frac{b}{ml^2}\thetadot +
+    \frac{u}{ml^2} 
+  \end{bmatrix}
+\end{equation}
+
+
+\section{\emph{Local} Linearization around an equilibrium point}
+\begin{description}
+\item[Equilibrium point] Any point at which the states of the system
+  are not changing.  Example: $\xdot = f(x_{eq}, u_{eq}) = 0$, and
+  $y_{eq} = g(x_{eq},u_{eq})$.
+\end{description}
+Of note is that equilibrium points can be forced.
+Now because the system is in a state of equilibrium around an
+equilibrium point, there isn't much to do with the examining of thet
+states, but we can look at the deviations from that state.
+
+Thus, we will look at distrubing it from the equilibrium point.  Let 
+\begin{equation}
+  \begin{split}
+    u(t) &= u_{eq} + \delta u(t) \quad \forall t \ge 0\\
+    x(0) &= x_{eq} + \delta x_{eq}(t)\\
+    \delta x(t) &\triangleq x(t) - x_{eq} \rightarrow x(t) = x_{eq} +
+    \delta x(t). 
+  \end{split}
+\end{equation}
+
+
+
+\end{document}
