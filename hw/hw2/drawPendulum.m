@@ -1,9 +1,9 @@
 function drawPendulum(u,L,gap,width,height)
 
     % process inputs to function
-    y        = u(1);
-    theta    = u(2);
-    t        = u(3);
+    y        = 0;%u(1);
+    theta    = u(1);
+    thetadot = u(2);
     
     % define persistent variables 
     persistent base_handle

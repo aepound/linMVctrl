@@ -512,6 +512,35 @@ pendulum
 on a cart and you can still use it for a inverted pendulum by just
 giving zero input to the cart. You can also create your own simulator
 in Matlab-Simulink to show your work.  
+\item[]
+
+The equation of motion is
+
+
+
+\begin{matlabc}
+%}
+
+% Setup the same parameters:
+param
+
+% Load in the data from the simulation
+load theta_out.mat
+d = theta_out.data;
+d = d(1:10:end);
+
+f1 = figure;
+plot(theta_out)
+ylabel('\theta')
+grid on
+
+% Output to .eps and .pdf:
+print(f1, '-depsc2', 'orbit.eps')
+system('ps2pdf -dEPSCrop orbit.eps')
+
+%{
+\end{matlabc}
+
 \item 
 Assume now that the pendulum is mounted on a cart and that
 you can control the cart's jerk, which is the derivative of its ac-

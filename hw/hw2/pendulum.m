@@ -66,9 +66,9 @@ function [sys,x0,str,ts,simStateCompliance]=mdlInitializeSizes(P)
 %
 sizes = simsizes;
 
-sizes.NumContStates  = 4;
+sizes.NumContStates  = 2;
 sizes.NumDiscStates  = 0;
-sizes.NumOutputs     = 4;
+sizes.NumOutputs     = 2;
 sizes.NumInputs      = 1;
 sizes.DirFeedthrough = 1;
 sizes.NumSampleTimes = 1;   % at least one sample time is needed
@@ -106,20 +106,17 @@ simStateCompliance = 'UnknownSimState';
 %=============================================================================
 %
 function sys=mdlDerivatives(t,x,u,P)
-xdot=zeros(4,1);
-y=x(1);
-theta=x(2);
-ydot=x(3);
-thetadot=x(4);
-M=P.M;
+xdot=zeros(2,1);
+theta=x(1);
+thetadot=x(2);
+
 m=P.m;
 l=P.l;
 g=P.g;
-Mq=[(M+m) m*l*cos(theta);
-    m*l*cos(theta) m*l^2];
-xdot(1)=x(3);
-xdot(2)=x(4);
-xdot(3:4)=Mq^(-1)*([u+m*l*thetadot^2*sin(theta);m*g*l*sin(theta)]);
+b=P.b;
+
+xdot(1)=x(2);
+xdot(2)=g*sin(theta)/l - b*thetadot/(m*l^2) + u/(m*l^2);
 sys = xdot;
 
 % end mdlDerivatives
@@ -160,7 +157,7 @@ sys = x;
 %
 function sys=mdlGetTimeOfNextVarHit(t,x,u)
 
-sampleTime = 1;    %  Example, set the next hit to be one second later.
+sampleTime = 10;    %  Example, set the next hit to be one second later.
 sys = t + sampleTime;
 
 % end mdlGetTimeOfNextVarHit
