@@ -1,0 +1,12 @@
+* prob 1
+** DONE part a)
+** DONE part b)
+** DONE part c)
+* prob 2
+** DONE part a)
+** DONE part b)
+** DONE part c)
+** DONE part d)
+* Prob 3
+** TODO part a)
+** TODO part b)

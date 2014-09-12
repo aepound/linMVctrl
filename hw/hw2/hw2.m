@@ -269,6 +269,7 @@ input $u := \left[\begin{smallmatrix}v&
 \item 
 Construct a state-space model for this system with state
 \begin{equation}
+  x = 
   \begin{bmatrix}
     x_1\\  x_2\\ x_3
   \end{bmatrix}= 
@@ -278,19 +279,222 @@ Construct a state-space model for this system with state
     \theta
   \end{bmatrix}
 \end{equation}
-and output $y = \left[x_1 x_2 \right]^T \in \Rbb^2$.
+and output $y = \left[\begin{smallmatrix} x_1 &
+    x_2\end{smallmatrix}\right]^T \in \Rbb^2$. 
+\item[]
+Well, we will start by computing the derivative of $x$
+\begin{equation}
+  \begin{split}
+    \xdot &=
+    \begin{bmatrix}
+      \pdot_x\cos(\theta) - p_x\sin(\theta)\thetadot +
+      \pdot_y\sin(\theta) + p_y\cos(\theta)\thetadot +
+      \cos(\theta)\thetadot  \\
+     -\pdot_x\sin(\theta) - p_x\cos(\theta)\thetadot +
+      \pdot_y\cos(\theta) - p_y\sin(\theta)\thetadot +
+      \sin(\theta)\thetadot  \\
+      \thetadot
+    \end{bmatrix}\\
+    &= 
+    \begin{bmatrix}
+      v\cos(\theta)\cos(\theta) - p_x\sin(\theta)\omega +
+      v\sin(\theta)\sin(\theta) + p_y\cos(\theta)\omega +
+      \cos(\theta)\omega  \\
+     -v\cos(\theta)\sin(\theta) - p_x\cos(\theta)\omega +
+      v\sin(\theta)\cos(\theta) - p_y\sin(\theta)\omega +
+      \sin(\theta)\omega  \\
+      \omega
+    \end{bmatrix}\\
+    &=
+    \begin{bmatrix}
+      v\left(\cos^2(\theta) + \sin^2(\theta)\right) +
+      \left(-p_x\sin(\theta) + p_y\cos(\theta)+
+      \cos(\theta)\right)\omega  \\
+     - \left(p_x\cos(\theta) + p_y\sin(\theta) - 
+      \sin(\theta)\right)\omega  \\
+      \omega
+    \end{bmatrix}\\
+    &=
+    \begin{bmatrix}
+      v + x_2\omega\\ -x_1\omega \\ \omega
+    \end{bmatrix}\\
+    &= f(x,u)\\
+    y &=
+    \begin{bmatrix}
+      x_1 \\ x_2
+    \end{bmatrix}\\
+    &= g(x,u).
+  \end{split}
+\end{equation}
+We can then find the statespace as
+\begin{align}\label{eq:xdot}
+    \xdot  &= f(x,u) = 
+    \begin{bmatrix}
+      v + x_2\omega\\ -x_1\omega \\ \omega
+    \end{bmatrix} 
+    & x &=
+    \begin{bmatrix}
+      x_1 \\ x_2 \\ x_3
+    \end{bmatrix} \\
+    y &= g(x,u) = 
+    \begin{bmatrix}
+      x_1 \\ x_2
+    \end{bmatrix}
+    & u &= 
+    \begin{bmatrix}
+      v \\ \omega
+    \end{bmatrix}
+\end{align}
 \item 
 Compute a local linearization for this system around the equilibrium
-point $x^{eq} = 0$ and $u^{eq} = \theta$. 
+point $x^{eq} = 0$ and $u^{eq} = \theta$.
+\item[]
+A local linearization around a equilibrium point $(x^{eq},u^{eq})$ can
+be found by
+\begin{align}
+  A &=
+  \left[\left(\partiald{f_i}{x_j}\right)_{ij}\right|_{x^{eq},u^{eq}} = 
+  \left[\begin{matrix}
+    0 & \omega & 0 \\
+    -\omega & 0 & 0 \\
+    0 & 0 & 0 
+  \end{matrix}\right|_{x^{eq},u^{eq}} 
+& B &= 
+  \left[\left(\partiald{f_i}{u_j}\right)_{ij}\right|_{x^{eq},u^{eq}} = 
+  \left[\begin{matrix}
+    1 & x_2 \\
+    0 & -x_1 \\
+    0 & 1 
+  \end{matrix}\right|_{x^{eq},u^{eq}} \\
+  C &= 
+  \left[\left(\partiald{g_i}{x_j}\right)_{ij}\right|_{x^{eq},u^{eq}} =
+  \left[\begin{matrix}
+    1 & 0 & 0\\ 0 & 1 & 0
+  \end{matrix}\right|_{x^{eq},u^{eq}}
+& D &= 
+  \left[\left(\partiald{g_i}{x_j}\right)_{ij}\right|_{x^{eq},u^{eq}} = 
+  0.
+\end{align}
+
+Thus, plugging in our values for $\omega,v$, and $x$, we get
+\begin{align}
+  \dot{\delta x} &=
+  \begin{bmatrix}
+    0 & 0 & 0 \\
+    0 & 0 & 0 \\
+    0 & 0 & 0 
+  \end{bmatrix}\delta x + 
+  \begin{bmatrix}
+    1 & 0  \\
+    0 & 0  \\
+    0 & 1  
+  \end{bmatrix}\delta u \\
+  \delta y &= 
+  \begin{bmatrix}
+    1 & 0 & 0 \\
+    0 & 1 & 0 \\
+  \end{bmatrix}\delta x.
+\end{align}
 \item 
 Show that $\omega(t) = v(t) = 1$, $p_x (t) = \sin t$, $p_y = 1 - \cos t$, and
 $\theta(t) = t, \forall \: t \ge 0$ is a solution to the system.
+\item[]
+Plugging these values into our formula for $x$, we get
+\begin{equation}
+  x =
+  \begin{bmatrix}
+    \sin(t)\cos(t) - \cos(t)\sin(t)\\
+    -\sin^2(t) - \cos^2(t)\\
+    t
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    0 \\ -1 \\ t
+  \end{bmatrix}.
+\end{equation}
+Then, taking the derivative of this with respect to $t$, we get
+\begin{equation}
+  \xdot = \frac{d}{dt}  \begin{bmatrix}
+    0 \\ -1 \\ t
+  \end{bmatrix} =   \begin{bmatrix}
+    0 \\ 0 \\ 1
+  \end{bmatrix}.
+\end{equation}
+Ok, now let's plug in the values for the trjectory into the equation
+\ref{eq:xdot} for $\xdot$ (from above)
+\begin{equation}
+  \xdot = \begin{bmatrix}
+      v + x_2\omega\\ -x_1\omega \\ \omega
+    \end{bmatrix}
+    = \begin{bmatrix}
+      0 + 0\cdot 1\\ -0\cdot 1 \\ 1
+    \end{bmatrix}
+    = \begin{bmatrix}
+    0 \\ 0 \\ 1
+  \end{bmatrix}.
+\end{equation}
 \item 
- Show that a local linearzation of this system around this trajectory
+ Show that a local linearization of this system around this trajectory
 $( \omega(t) = v(t) = 1\text{, } p_x (t) = \sin t\text{, } p_y =
 1-\cos t\text{, and }\theta(t) = t,\: \forall \: t \ge 0)$
 results in an Linear Time Invariant (LTI) system.
+\item[]
+Simlar to above with the linearization around the equilibrium point,
+we take derivatives to find the linearization around the trajectory
+specified. 
+We obtain the matrices
+\begin{align}
+  A &=
+  \left[\left(\partiald{f_i}{x_j}\right)_{ij}\right|_{x^{sol},u^{sol}} = 
+  \left[\begin{matrix}
+    0 & \omega & 0 \\
+    -\omega & 0 & 0 \\
+    0 & 0 & 0 
+  \end{matrix}\right|_{x^{sol},u^{sol}} 
+& B &= 
+  \left[\left(\partiald{f_i}{u_j}\right)_{ij}\right|_{x^{sol},u^{sol}} = 
+  \left[\begin{matrix}
+    1 & x_2 \\
+    0 & -x_1 \\
+    0 & 1 
+  \end{matrix}\right|_{x^{sol},u^{sol}} \\
+  C &= 
+  \left[\left(\partiald{g_i}{x_j}\right)_{ij}\right|_{x^{sol},u^{sol}} =
+  \left[\begin{matrix}
+    1 & 0 & 0\\ 0 & 1 & 0
+  \end{matrix}\right|_{x^{sol},u^{sol}}
+& D &= 
+  \left[\left(\partiald{g_i}{x_j}\right)_{ij}\right|_{x^{sol},u^{sol}} = 
+  0.
+\end{align}
+Now we can plug in the trajectory and we will get the system
+\begin{align}
+  \dot{\delta x} &=
+  \begin{bmatrix}
+    0 & 1 & 0 \\
+    -1 & 0 & 0 \\
+    0 & 0 & 0 
+  \end{bmatrix}\delta x + 
+  \begin{bmatrix}
+    1 & -1 \\
+    0 & 0  \\
+    0 & 1  
+  \end{bmatrix}\delta u \\
+  \delta y &= 
+  \begin{bmatrix}
+    1 & 0 & 0 \\
+    0 & 1 & 0 \\
+  \end{bmatrix}\delta x,
+\end{align} 
+which is an LTI, because the equations are linear and all
+the coefficient matrices are not time varying.
 \end{enumerate}
+
+
+
+
+
+
 \section{Problem 3}
 Consider the inverted pendulum in Figure 1
 \begin{enumerate}[label=(\alph*)]
