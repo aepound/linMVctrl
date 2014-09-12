@@ -78,9 +78,10 @@ can be written as
   \caption{Inverted Pendulum}
   \label{fig:1}
 \end{figure}
-\begin{equation*}
+\begin{equation}
+\label{eq:eqnMot}
  ml^2 \thetaddot = mgl \sin \theta - b\thetadot + T 
-\end{equation*} 
+\end{equation} 
 where $T$ denotes the applied torque at the base and $g$ is the
 gravitational acceleration. For this system assume the input and
 output to the system are the signals $u$ and $y$ defined as $T =
@@ -90,13 +91,163 @@ function that truncates $u$ at $+1$ and $-1$.
 \item 
  Linearize this system around the equilibrium point for which
 $\theta = 0$.  
+\item[] Ok, first, let's set out some definitions.
+  \begin{equation}
+    \begin{split}
+      \xdot &= f(x,u)\\ y &= g(x,u)
+    \end{split}
+  \end{equation}
+is our nonlinear system.  Let our state be
+\begin{equation}
+  x =
+  \begin{bmatrix}
+    \theta \\ \thetadot
+  \end{bmatrix},
+\end{equation}
+and our equation of motion is given by equation \ref{eq:eqnMot} above.
+Taking the derivative of our state, we get
+\begin{equation}
+  \xdot =
+  \begin{bmatrix}
+    \thetadot \\ \thetaddot
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    \thetadot \\ 
+    \frac{g}{l}\sin(\theta) - \frac{b}{ml^2}\thetadot +
+    \frac{1}{ml^2}T(u) 
+  \end{bmatrix} = f(x,u).
+\end{equation}
+In addition, our output equation is
+\begin{equation}
+  y = \theta.
+\end{equation}
+
+Now, when we do the linearization around an equilbrium point, we will
+obtain equations of the form
+\begin{equation}
+  \begin{split}
+    \dot{\delta x} &= A \delta x + B \delta u\\
+    \delta y &= C \delta x + D \delta u,
+  \end{split}
+\end{equation}
+where
+\begin{align}
+  A &= \left.\partiald{f}{x}\right|_{(\xbar,\ubar)} & 
+  B &= \left.\partiald{f}{u}\right|_{(\xbar,\ubar)} &
+  C &= \left.\partiald{g}{x}\right|_{(\xbar,\ubar)} & 
+  D &= \left.\partiald{g}{u}\right|_{(\xbar,\ubar)},  
+\end{align}
+and $\xbar = x^{eq}$, and $\ubar=u^{eq}$.
+So for this system, we get
+\begin{equation}\label{eq:mats}
+  \begin{split}
+      A &= \left.\partiald{f}{x}\right|_{(\xbar,\ubar)} 
+        =
+        \left[\left(\partiald{f_i}{x_j}\right)_{ij}\right|_{(\xbar,\ubar)} 
+        =
+        \begin{bmatrix}
+          0 & 1 \\ \frac{g}{l}\cos(\bar{\theta}) & \frac{-b}{ml^2}
+        \end{bmatrix} \\
+      B &= \left.\partiald{f}{u}\right|_{(\xbar,\ubar)} 
+       =
+       \left[\left(\partiald{f_i}{u_j}\right)_{ij}\right|_{(\xbar,\ubar)} 
+       =
+       \begin{bmatrix}
+         0 \\ \frac{1}{ml^2}\partiald{T(u)}{u}
+       \end{bmatrix} \\
+  C &= \left.\partiald{g}{x}\right|_{(\xbar,\ubar)} 
+  =
+  \left[\left(\partiald{g_i}{x_j}\right)_{ij}\right|_{(\xbar,\ubar)}  
+  =
+  \begin{bmatrix}
+    1 & 0
+  \end{bmatrix} \\
+  D &= \left.\partiald{g}{u}\right|_{(\xbar,\ubar)}
+  =
+  \left[\left(\partiald{g_i}{u_j}\right)_{ij}\right|_{(\xbar,\ubar)}  
+  = 0.
+  \end{split}
+\end{equation}
+The derivative of the $T(u)$ is 
+\begin{equation*}
+  \partiald{T(u)}{u} = \upsilon(u) = 
+  \begin{cases}
+    1 & -1 < u < 1\\
+    0 & \text{otherwise}.
+  \end{cases}
+\end{equation*}
+
+Ok, now for $\bar{\theta} = 0$,
+We get the system
+\begin{equation}
+  \begin{split}
+    \dot{\delta x} &= 
+    \begin{bmatrix}
+      0 & 1 \\ \frac{g}{l} & \frac{-b}{ml^2}
+    \end{bmatrix}
+    \delta x + 
+    \begin{bmatrix}
+    0 \\ \frac{\upsilon(u)}{ml^2}
+    \end{bmatrix}
+    \delta u\\
+    \delta y &= 
+    \begin{bmatrix}
+      1 & 0
+    \end{bmatrix}
+    \delta x.
+  \end{split}
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \item 
  Linearize this system around the equilibrium point for which $\theta
  = \pi$ (Assume that the pendulum is free to rotate all the way to
  this configuration without hitting the table).
+\item[] Plugging in $\theta = \pi$ into equation \ref{eq:mats}, we get
+\begin{equation}
+  \begin{split}
+    \dot{\delta x} &= 
+    \begin{bmatrix}
+      0 & 1 \\ \frac{-g}{l} & \frac{-b}{ml^2}
+    \end{bmatrix}
+    \delta x + 
+    \begin{bmatrix}
+    0 \\ \frac{\upsilon(u)}{ml^2}
+    \end{bmatrix}
+    \delta u\\
+    \delta y &= 
+    \begin{bmatrix}
+      1 & 0
+    \end{bmatrix}
+    \delta x.
+  \end{split}
+\end{equation}
+
 \item 
 Linearize the system around the equilibrium point for which $\theta =
 \frac{\pi}{4}$. 
+\item[] And finally, pluggin in $\theta = \pi/4$ into equation
+  \ref{eq:mats}, we obtain
+\begin{equation}
+  \begin{split}
+    \dot{\delta x} &= 
+    \begin{bmatrix}
+      0 & 1 \\ \frac{g\sqrt{2}}{2l} & \frac{-b}{ml^2}
+    \end{bmatrix}
+    \delta x + 
+    \begin{bmatrix}
+    0 \\ \frac{\upsilon(u)}{ml^2}
+    \end{bmatrix}
+    \delta u\\
+    \delta y &= 
+    \begin{bmatrix}
+      1 & 0
+    \end{bmatrix}
+    \delta x.
+  \end{split}
+\end{equation}
+
 \end{enumerate}
 
 \section{Problem 2}
