@@ -69,6 +69,8 @@ fclose(fid);
 \begin{document}
 \maketitle
 
+Sorry, I didn't get to making the figures... Maybe next time. 
+
 \section{Problem 1}\label{sec:prob1}
 Consider the inverted pendulum in Figure 1 . The equation of motion
 can be written as
@@ -515,8 +517,52 @@ in Matlab-Simulink to show your work.
 \item[]
 
 The equation of motion is
+\begin{equation}
+  ml^2\thetaddot = mgl\sin(\theta) + b\thetadot + T,
+\end{equation}
+which gives
+\begin{equation}
+  \thetaddot = \frac{g}{l}\sin(\theta) - \frac{b}{ml^2}\thetadot +
+  \frac{1}{ml^2}T.
+\end{equation}
+We want $\frac{1}{ml^2}T$ to be able to cancel out all the terms of
+on the right hand of the equation above.  Thus, our $T$ wil be
+\begin{equation}
+  T = ml^2\left(\frac{-g}{l}\sin(\theta) + \frac{b}{ml^2}\thetadot
+    +u_{lin}\right). 
+\end{equation}
+Now if we use a PID controller for the linear input portion of $T$,
+then we can stick that in and we'll get 
+\begin{equation}
+  T = ml^2\left(\frac{-g}{l}\sin(\theta) + \frac{b}{ml^2}\thetadot
+     - k_p\theta - k_d\thetadot \right).
+\end{equation}
 
+I set this up in the \emph{InvertedPendulum} files.  The parameters
+given wer in the file 
 
+{\singlespacing
+\lstinputlisting{param.m}
+} 
+
+I also found it necessary to modify the pendulum.m file in the
+following ways:
+
+{\singlespacing
+\lstinputlisting[firstline=57,lastline=58,firstnumber=57]{pendulum.m}
+\lstinputlisting[firstline=69,lastline=71,firstnumber=69]{pendulum.m}
+\lstinputlisting[firstline=102,lastline=120,firstnumber=102]{pendulum.m}
+}
+I also modified the simulink model, by adding in a PID controller with
+the PID parameters in paralell with the controller specified in the
+file controller.m:
+{\singlespacing
+\lstinputlisting{controller.m}
+}
+
+I had difficulties getting the drawPendulum to work, so I just dumped
+the output to the workspace and plotted $\theta$ from there.  The plot
+is shown in figure \ref{fig:prob3}.
 
 \begin{matlabc}
 %}
@@ -525,30 +571,77 @@ The equation of motion is
 param
 
 % Load in the data from the simulation
-load theta_out.mat
+load thetaout.mat
 d = theta_out.data;
 d = d(1:10:end);
 
 f1 = figure;
-plot(theta_out)
+try
+    plot(theta_out)
+catch ME
+    plot(d)
+    xlabel('Sample')
+end
 ylabel('\theta')
 grid on
 
 % Output to .eps and .pdf:
-print(f1, '-depsc2', 'orbit.eps')
-system('ps2pdf -dEPSCrop orbit.eps')
+print(f1, '-depsc2', 'theta.eps')
+system('ps2pdf -dEPSCrop theta.eps')
 
 %{
 \end{matlabc}
 
+\begin{figure}
+  \centering
+  \includegraphics[width=.8\linewidth]{theta}
+  \caption{The $\theta$ measurement as output from the simulation.}
+  \label{fig:prob3}
+\end{figure}
+
+
 \item 
 Assume now that the pendulum is mounted on a cart and that
-you can control the cart's jerk, which is the derivative of its ac-
-celeration $a$. In this case,
-$T = -mla \cos(\theta), a = u$. Design the feedback linearization con-
-troller for the new system.Show your work in using 
+you can control the cart's jerk, which is the derivative of its
+acceleration $a$. In this case, 
+$T = -mla \cos(\theta), \dot{a} = u$. Design the feedback linearization
+controller for the new system.Show your work in using  
 \emph{InvertedPendulum.zip} (use parameters in 
 \emph{param.m}).
+\item[]
+  We begin by substituting the above expression for $T$ into the
+  equation of motion to get
+  \begin{equation}
+    \begin{split}
+      \thetaddot &= \frac{g}{l}\sin(\theta) - \frac{b}{ml^2}\thetadot
+      + \frac{T}{ml^2}\\
+      &=  \frac{g}{l}\sin(\theta) - \frac{b}{ml^2}\thetadot
+      + \frac{mla\cos(\theta)}{ml^2}\\
+      &=  \frac{g}{l}\sin(\theta) - \frac{b}{ml^2}\thetadot
+      + \frac{a}{l}\cos(\theta).
+    \end{split}
+  \end{equation}
+Now, let's define a state vector and let $v = \thetaddot$, and thus,
+$\vdot = \dddot{\theta}$.  Taking a derivative of $v$ to get $\vdot$,
+we obtain
+\begin{equation}\label{eq:eq10}
+  \vdot = \frac{g}{l}\sin(\theta)\thetadot - \frac{b}{ml^2}\thetaddot 
+  - \frac{\dot{a}}{l}\cos(\theta) + \frac{a}{l}\sin(\theta)\thetadot
+\end{equation}
+Now, we are given that we can control the jerk, i.e. we can control
+$\dot{a}$. So let $u = \dot{a}$, and then compensating for all the
+``nonlinear'' terms in the equations of motion, we get an $\dot{a}$
+that looks like
+\begin{equation}
+  u = \dot{a} = g\tan(\theta) \thetadot -
+  \frac{b}{ml}\frac{\thetaddot}{\cos(\theta)}
+  + a\tan(\theta)\thetadot - \frac{l}{\cos(\theta)}u_{lin}.
+\end{equation}
+The first three terms cancel out everything else in equation
+\ref{eq:eq10}, leaving
+\begin{equation}
+  \vdot = u_{lin}.
+\end{equation}
 \end{enumerate}
 
 \end{document}
