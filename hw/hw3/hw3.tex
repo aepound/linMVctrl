@@ -1,0 +1,536 @@
+\documentclass[10pt]{article}
+%\input{page}
+\usepackage{fullpage}	% Does about the same as the \input{page}...
+% ^ part of the preprint package...
+
+\input{symbolmac}
+\usepackage{amsmath}
+\usepackage{amssymb}  	% provides Rbb, etc.
+\usepackage{latexsym}  	% provides \Box
+%\usepackage{theorem} \input{proof}
+%\pagestyle{empty}
+\usepackage{graphicx} 	% for inserting graphics.
+%\usepackage{booktabs}	% for fancy tabular environments and stuff
+%\usepackage{subfig}	% for subfigures... 
+%(This breaks Beamer if the patch isn't applied!!)
+%usepackage{hyperref}
+
+
+
+%% ******** Set the style: **************
+%\lstset{style=matlab}
+
+%\newcommand{\matlab}{{\sc Matlab }} % Or 
+\renewcommand{\matlab}{{\sc Matlab }} 
+
+% \newcommand{\homedir}{/home/aepound}
+% \newcommand{\figdir}{\homedir/figs}  % picture stuff: ps,fig,tex
+%\newtheorem{theorem}{Theorem}
+%\newtheorem{corollary}{Corollary}
+%\newtheorem{lemma}{Lemma}
+
+\title{Homework 3
+}
+\author{Andrew Pound}
+\date{\today}
+
+
+
+\begin{document}
+\maketitle
+
+%\begin{abstract}
+%\end{abstract}
+
+\section{Problem 1}
+
+Consider a system with input $u$ and output $y$. Three experiments are
+performed on the system using the input $u_1(t)$, $u_2(t)$, and
+$u_3(t)$ for $t \ge 0$. In each case, the initial state $x(0)$ at $t =
+0$ is the same. The corresponding outputs are denoted by $y_1$, $y_2$
+and $y_3$. Which one of the following statements are correct if $x(0)
+\neq 0$ and which are correct if $x(0) = 0$?
+\begin{enumerate}
+\item If $u_3 = u_1 + u_2$, then $y_3 = y_1 + y_2$.
+
+\item If $u_3 = 0.5(u_1 + u_2)$ then $y_3 = 0.5(y_1 + y_2)$.
+\item If $u_3 = u_1- u_2$ then $y_3 = y_1 - y_2$.
+\end{enumerate}
+\paragraph{My Answer}
+It is unclear what type of system is being used in the question.  
+If the system in question is a linear system, then both the zero-state
+responses and the zero-input reponse satisfy the superposition
+principle.  By this, if the system is linear, that all three ( (a),
+(b), and  (c) ) are true both when  $x(0) = 0$. 
+But when $x(0) \neq 0$ (i.e. there is some previous state), then the
+only one that is correct is (b), because the sum  has twice the
+initial state dependence than the single output would have.
+
+%, because then there is
+%no zero-input 
+%response.
+
+%the initial state 
+%which would then be a zero-input response to be added to the
+%zero-state reponses that occur from each of the $u_i$ inputs) and they
+%are also all true when
+
+Now if the system is \emph{not} linear, then all bets are off.  The
+order order interactions may occur in all sort of manners, and the
+state may have interesting interactions with the input that cannot
+gaurantee that the linearity of the choices is conserved.
+
+%Truthfully, I am confused by this question and don't understand how any
+%of the choices are different from each other and how a non-zero
+%initial state would determine whether or not superposition would hold
+%for a system. I am fairly certain that only the  properties of the
+%system itself (i.e. whether it is linear or not) determine whether
+%linearity/superposition will be possible.
+
+
+\section{Problem 2}
+ Consider a system described by
+ \begin{equation}
+   \ddot{y} + 2\dot{y}-3y = \dot{u} -u
+ \end{equation}
+ \begin{itemize}
+ \item Find the transfer function of the system.
+ \item So, to find the transfer function, let's first take the Laplace
+   transform of the system.
+   \begin{equation*}
+     Y(s)s^2 + 2Y(s)s - 3Y(s) - Y(0) =
+     U(s)s - U(s).
+   \end{equation*}
+The transfer function is defined with $Y(0) = 0$, so that term will
+drop out.  Next we'll gather terms on each side of the equation.
+\begin{equation*}
+  Y(s)\left(s^2 + s - 3\right) =
+  U(s)\left(s - 1\right)
+\end{equation*}
+Next we'll look at the ratio of output to input to finally give us our
+transfer function:
+\begin{equation*}
+\begin{split}
+  \frac{Y(s)}{U(s)} &= \frac{s - 1}{s^2 +
+    2s - 3} \\
+%  &= \frac{\frac{1}{s}\left(1 - s\right)}{\frac{1}{s^2}\left( 1 + 2s -
+%      3s^2\right)} \\
+  &=
+  \frac{\left(s-1\right)}
+       {\left(3s^2-2s-1\right)} \\ 
+       &=\frac{(s-1)}{(3s+1)(s-1)}\\
+       &= \frac{1}{(3s+1)} = G(s).
+\end{split}
+\end{equation*}
+ \item Find the impulse response of the system.
+ \item[] To find the inpulse response of the system, we need to take
+   the inverse Laplace transform of the transfer function.
+Thus we get:
+\begin{equation*}
+  \begin{split}
+    Y_{imp}(t) &= \mathcal{L}^{-1}\left\{G(s)\right\}\\
+    &= \mathcal{L}^{-1}\left\{\frac{1}{3(s+\frac{1}{3})}\right\}\\
+    &= \frac{1}{3}\left(e^{-\frac{1}{3}t}u(t)\right) \\
+    & = \frac{1}{3}e^{-\frac{1}{3}t}u(t).
+  \end{split}
+\end{equation*}
+ \end{itemize}
+
+\section{Problem 3}
+ Show that the following pair of systems are zero-state equivalent, but
+not algebraically equivalent.
+\begin{itemize}
+\item 
+  \begin{align*}
+    &\qquad \text{A} && \qquad\text{B}\\
+    \xdot &=
+    \begin{bmatrix}
+      1 & 0 \\ 0 1
+    \end{bmatrix}x + 
+    \begin{bmatrix}
+      1 \\ 0
+    \end{bmatrix}u
+    & \dot{\xbar} &=
+    \begin{bmatrix}
+      1 & 0 \\ 0 & 2 
+    \end{bmatrix} \xbar + 
+    \begin{bmatrix}
+      1 \\ 0
+    \end{bmatrix} u\\
+    y &= 
+    \begin{bmatrix}
+      1 & 0 
+    \end{bmatrix}x
+    & \ybar &=
+    \begin{bmatrix}
+      1 & 0 
+    \end{bmatrix}\xbar
+  \end{align*}
+
+\item[]
+In order to show zero-state equivalence, we need to show that bothe
+systems realize the same \emph{transfer function}.
+\begin{align*}
+  G_A &=C(sI-A)^{-1}B + D & G_B &= C(sI - A)^{-1} + D\\
+  &=
+  \begin{bmatrix}
+    1 &0 
+  \end{bmatrix}
+  \begin{bmatrix}
+    s-1 & 0 \\ 0 & s-1
+  \end{bmatrix}
+  \begin{bmatrix}
+    1\\0
+  \end{bmatrix}
+  &&=
+  \begin{bmatrix}
+    1 &0 
+  \end{bmatrix}
+  \begin{bmatrix}
+    s-1 & 0 \\ 0 & s-2
+  \end{bmatrix}
+  \begin{bmatrix}
+    1\\0
+  \end{bmatrix}\\
+  &= \frac{1}{(s-1)^2}
+  \begin{bmatrix}
+    1 &0 
+  \end{bmatrix}
+  \begin{bmatrix}
+    s-1 & 0 \\ 0 & s-1
+  \end{bmatrix}
+  \begin{bmatrix}
+    1\\0
+  \end{bmatrix}
+  &&=\frac{1}{(s-1)(s-2)}
+  \begin{bmatrix}
+    1 &0 
+  \end{bmatrix}
+  \begin{bmatrix}
+    s-2 & 0 \\ 0 & s-1
+  \end{bmatrix}
+  \begin{bmatrix}
+    1\\0
+  \end{bmatrix}\\
+  &= \frac{1}{(s-1)^2}
+  \begin{bmatrix}
+    1 &0 
+  \end{bmatrix}
+  \begin{bmatrix}
+    s-1  \\ 0 
+  \end{bmatrix}
+  &&=\frac{1}{(s-1)(s-2)}
+  \begin{bmatrix}
+    1 &0 
+  \end{bmatrix}
+  \begin{bmatrix}
+    s-2 \\ 0
+  \end{bmatrix}\\
+  &=\frac{(s-1)}{(s-1)^2} 
+  &&=\frac{(s-2)}{(s-1)(s-2)}\\
+  &=\frac{1}{(s-1)}
+  &&=\frac{1}{(s-1)}
+\end{align*}
+Thus, the systems are zero-state equivalent.  Now to show that these
+are \emph{not} algebraicly equivalent, wee can take a look at the
+characteristic polynomial.
+\begin{align*}
+  p_A(s) &= (s-1)^2 & P_B&=(s-1)(s-2)
+\end{align*}
+These are not the same, and thus these two systems are not algebraicly
+equivalent. 
+
+\item 
+  \begin{align*}
+    &\qquad \text{A} && \qquad\text{B}\\
+    \xdot &=
+    \begin{bmatrix}
+      1 & 0 \\ 0 & 1
+    \end{bmatrix}x + 
+    \begin{bmatrix}
+      1 \\ 0
+    \end{bmatrix}u
+    & \dot{\xbar} &=
+      \xbar + u \\
+    y &=
+    \begin{bmatrix}
+      1 & 0
+    \end{bmatrix}x
+    & \ybar &= \xbar
+  \end{align*}
+
+\item[]
+Same deal for this one.  Let's look at the transfer functions:
+\begin{align*}
+  G_A &=C(sI-A)^{-1}B + D & G_B &= C(sI - A)^{-1} + D\\
+  &=
+  \begin{bmatrix}
+    1 &0 
+  \end{bmatrix}
+  \begin{bmatrix}
+    s-1 & 0 \\ 0 & s-1
+  \end{bmatrix}^{-1}
+  \begin{bmatrix}
+    1\\0
+  \end{bmatrix}
+  &&=
+    1 (s-1)^{-1}1\\
+  &= \frac{1}{(s-1)^2}
+  \begin{bmatrix}
+    1 &0 
+  \end{bmatrix}
+  \begin{bmatrix}
+    s-1 & 0 \\ 0 & s-1
+  \end{bmatrix}
+  \begin{bmatrix}
+    1\\0
+  \end{bmatrix}
+  &&=\frac{1}{(s-1)}\\
+  &= \frac{1}{(s-1)^2}
+  \begin{bmatrix}
+    1 &0 
+  \end{bmatrix}
+  \begin{bmatrix}
+    s-1  \\ 0 
+  \end{bmatrix}
+  &&\\
+  &=\frac{(s-1)}{(s-1)^2} 
+  &&\\
+  &=\frac{1}{(s-1)}
+  &&
+\end{align*}
+So, we can say that these systems are zero-state equivalent.  Now
+let's consider the characteristic polynomials:
+\begin{align*}
+  p_A(s) &=(s-1)^2 & p_B(s) &= (s-1)
+\end{align*}
+\end{itemize}
+
+\section{Problem 4}
+Consider the following two systems
+\begin{align*}
+      &\qquad \text{A} && \qquad\text{B}\\
+      \xdot &=
+      \begin{bmatrix}
+        2 & 1 & 2 \\ 0 & 2 & 2\\ 0 & 0 & 1
+      \end{bmatrix} x +
+      \begin{bmatrix}
+        1 \\ 1 \\ 0
+      \end{bmatrix}u
+      & \dot{\xbar} &=
+      \begin{bmatrix}
+        2 & 1 & 1 \\ 0 & 2 & 1 \\ 0 & 0 & -1
+      \end{bmatrix}\xbar + 
+      \begin{bmatrix}
+        1 \\ 1 \\ 0
+      \end{bmatrix}u\\
+      y &=
+      \begin{bmatrix}
+        1 & -1 & 0
+      \end{bmatrix}x 
+      & y&=
+      \begin{bmatrix}
+        1 & -1 & 0
+      \end{bmatrix}\xbar
+\end{align*}
+\begin{itemize}
+\item  Are these systems zero-state equivalent?
+\item[] 
+Once again we need to see if these systems realize the same transfer
+function.
+So for system A, we get
+\begin{equation}
+  \begin{split}
+    G_A &=
+    \begin{bmatrix}
+      1 & -1 & 0
+    \end{bmatrix}\underbrace{
+    \begin{bmatrix}
+      s-2 & -1 & -2 \\ 0 & s-2 & -2 \\ 0 & 0 & s-1
+    \end{bmatrix}}_{\bar{A}}
+    \begin{bmatrix}
+      1 \\ 1\\ 0
+    \end{bmatrix}\\
+    &= \frac{1}{\det(\bar{A})}
+    \begin{bmatrix}
+      1 & -1 & 0
+    \end{bmatrix}
+    \begin{bmatrix}
+      (s-2)(s-1) & 0 & 0 \\ (s-1) & (s-2)(s-1) & 0 \\ 2+ 2(s-2) &
+      2(s-2) & (s-2)^2
+    \end{bmatrix}^T
+    \begin{bmatrix}
+      1 \\ 1 \\ 0
+    \end{bmatrix}\\
+    &= 
+    \begin{bmatrix}
+      1 & -1 & 0
+    \end{bmatrix}
+    \begin{bmatrix}
+      \frac{1}{(s-2)} &  \frac{1}{(s-2)^2} &  \frac{2}{(s-2)(s-1)} \\
+      0 & \frac{1}{(s-2)} & \frac{2}{(s-2)(s-1)} \\
+      0 & 0& (s-2)^2
+    \end{bmatrix}
+    \begin{bmatrix}
+      1 \\ 1 \\ 0
+    \end{bmatrix}\\
+    &= 
+    \begin{bmatrix}
+      1 & -1 & 0
+    \end{bmatrix}
+    \begin{bmatrix}
+      \frac{1}{(s-2)} +  \frac{1}{(s-2)^2}\\
+       \frac{1}{(s-2)} \\
+      0 
+    \end{bmatrix}\\
+    &=      \frac{1}{(s-2)} +  \frac{1}{(s-2)^2}-
+       \frac{1}{(s-2)} \\
+    &=  \frac{1}{(s-2)^2}.
+  \end{split}
+\end{equation}
+Now for system B, let's do the same thing.
+\begin{equation}
+  \begin{split}
+    G_B &=
+    \begin{bmatrix}
+      1 & -1 & 0
+    \end{bmatrix}\underbrace{
+    \begin{bmatrix}
+      s-2 & -1 & -1 \\ 0 & s-2 & -1 \\ 0 & 0 & s+1
+    \end{bmatrix}}_{\bar{A}}
+    \begin{bmatrix}
+      1 \\ 1\\ 0
+    \end{bmatrix}\\
+    &= \frac{1}{\det(\bar{A})}
+    \begin{bmatrix}
+      1 & -1 & 0
+    \end{bmatrix}
+    \begin{bmatrix}
+      (s-2)(s+1) & 0 & 0 \\ (s+1) & (s-2)(s+1) & 0 \\ 1+ (s-2) &
+      (s-2) & (s-2)^2
+    \end{bmatrix}^T
+    \begin{bmatrix}
+      1 \\ 1 \\ 0
+    \end{bmatrix}\\
+    &= 
+    \begin{bmatrix}
+      1 & -1 & 0
+    \end{bmatrix}
+    \begin{bmatrix}
+      \frac{1}{(s-2)} &  \frac{1}{(s-2)^2} &
+      \frac{(s-1)}{(s-2)^2(s+1)} \\ 
+      0 & \frac{1}{(s-2)} & \frac{1}{(s-2)(s+1)} \\
+      0 & 0& (s+1)
+    \end{bmatrix}
+    \begin{bmatrix}
+      1 \\ 1 \\ 0
+    \end{bmatrix}\\
+    &= 
+    \begin{bmatrix}
+      1 & -1 & 0
+    \end{bmatrix}
+    \begin{bmatrix}
+      \frac{1}{(s-2)} +  \frac{1}{(s-2)^2}\\
+       \frac{1}{(s-2)} \\
+      0 
+    \end{bmatrix}\\
+    &=      \frac{1}{(s-2)} +  \frac{1}{(s-2)^2}-
+       \frac{1}{(s-2)} \\
+    &=  \frac{1}{(s-2)^2}.
+  \end{split}
+\end{equation}
+Thus, they are zero-state equivalent.
+\item  Are they algebraically equivalent?
+Let's look at the characteristic polynomials to find this out.
+\begin{align*}
+  p_A(s) &=(s-2)^2(s-1) &p_B(s) &=(s-2)^2(s+1)
+\end{align*}
+And hence, they are not algebraicly equivalent.
+\end{itemize}
+
+\section{Problem 5}
+
+Find state space realization for the transfer function matrix
+\begin{equation}
+  \hat{G}(s) =
+  \begin{bmatrix}
+    \frac{-(12s+6)}{3s+34} & \frac{22s+23}{3s+34}
+  \end{bmatrix}
+\end{equation}
+The first thing that we need to do is to get $\hat{G}_{sp}(s)$ from
+$\hat{G}(s)$. We get that by subtracting off the $D$ component.  We
+get $D$ by taking the limit
+\begin{equation}
+\begin{split}
+  D &= \lim_{s\rightarrow \infinity} \hat{G}(s) \\
+  &= \left.\frac{1}{s + 34/3}
+  \begin{bmatrix}
+    -4s -2 & 22/3 s + 23/3
+  \end{bmatrix}\right|_{s\rightarrow\infinity}\\
+  & =
+  \begin{bmatrix}
+    -4 & 22/3
+  \end{bmatrix}
+\end{split}
+\end{equation}
+Now, we can subtract this off of the transfer function to obtain the
+strictly proper portion,
+\begin{equation}
+  \hat{G}(s) =\frac{1}{s + 34/3}
+  \begin{bmatrix}
+    -4s -\frac{6}{3} + 4s + \frac{136}{3} & \frac{22}{3}s +
+    \frac{69}{9} - \frac{22}{3}s - \frac{506}{9}
+  \end{bmatrix}
+   = \frac{1}{s+34/3}
+  \begin{bmatrix}
+    \frac{130}{3} & \frac{-437}{9}
+  \end{bmatrix}.
+\end{equation}
+Matching up these terms with the formulas we went over in class, we
+can see that our matrices will have the following dimensions
+\begin{align}
+  A&\in \mathbb{R}^{2\times 2} & B &\in \mathbb{R}^{2\times 2} \\
+  C&\in \mathbb{R}^{1\times 2} & D &\in \mathbb{R}^{1\times 2}.
+\end{align}
+We can identify the terms of $\hat{G}(s)$ as follows
+\begin{align}
+  \alpha_1 &= 34/3 & N_1 &=
+  \begin{bmatrix}
+    \frac{130}{3} & \frac{-437}{9}
+  \end{bmatrix}.
+\end{align}
+Using this and equation (4.34) from the book (3rd ed.) we get the
+following state space representation in controllable canonical form, 
+\begin{align}
+  \dot{\xbf} &=
+  \begin{bmatrix}
+    -\alpha_1 I_p
+  \end{bmatrix}\xbf +
+  \begin{bmatrix}
+    I_p
+  \end{bmatrix}\ubf
+  & \Rightarrow \hspace{3em}
+  \dot{\xbf} &=
+  \begin{bmatrix}
+    -\frac{34}{3} & 0 \\ 0 & -\frac{34}{3}
+  \end{bmatrix}\xbf
+   +
+   \begin{bmatrix}
+     1 & 0 \\ 0 &1
+   \end{bmatrix}\ubf\\
+  y &=
+  \begin{bmatrix}
+    N_1
+  \end{bmatrix}\xbf + D\ubf
+  & y &=
+  \begin{bmatrix}
+    \frac{130}{3} & -\frac{437}{9}
+  \end{bmatrix}\xbf +
+  \begin{bmatrix}
+    -4 & \frac{22}{3}
+  \end{bmatrix}\ubf.
+\end{align}
+% \bibliographystyle{ieeetr}
+% \newcommand{\bibdir}{~}
+% \bibliography{\bibdir/~}
+\end{document}
