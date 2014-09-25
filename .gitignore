@@ -87,3 +87,8 @@ sympy-plots-for-*.tex/
 
 # xindy
 *.xdy
+
+# Emacs temporary files
+*~
+# matlab autosave files
+*.asv
