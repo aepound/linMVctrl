@@ -1,0 +1,164 @@
+\documentclass[10pt]{article}
+%\input{page}
+\usepackage{fullpage}	% Does about the same as the \input{page}...
+% ^ part of the preprint package...
+
+\input{symbolmac}
+\usepackage{amsmath}
+\usepackage{amssymb}  	% provides Rbb, etc.
+\usepackage{latexsym}  	% provides \Box
+%\usepackage{theorem} \input{proof}
+%\pagestyle{empty}
+\usepackage{graphicx} 	% for inserting graphics.
+%\usepackage{booktabs}	% for fancy tabular environments and stuff
+%\usepackage{subfig}	% for subfigures... 
+%(This breaks Beamer if the patch isn't applied!!)
+%usepackage{hyperref}
+\usepackage{enumitem}
+
+%% ******** For code: ******************
+%\usepackage{listings}
+%\usepackage[usenames,dvipsnames]{color}
+%% ******** Define the language: *******
+%\lstdefinelanguage{matlabfloz}{%
+%	alsoletter={...},%
+%	morekeywords={% 						% keywords
+%	break,case,catch,continue,elseif,else,end,for,function,global,%
+%	if,otherwise,persistent,return,switch,try,while,...,
+%        classdef,properties,methods},%
+%	comment=[l]\%,% 						% comments
+%	morecomment=[l]...,% 					% comments
+%	morestring=[m]',%   						% strings 
+%}[keywords,comments,strings]%
+%\lstdefinestyle{matlab}{language=matlabfloz,							
+%		keywordstyle=\color[rgb]{0,0,1},					
+%		commentstyle=\color[rgb]{0.133,0.545,0.133},	% comments
+%		stringstyle=\color[rgb]{0.627,0.126,0.941},	% strings
+%		numbersep=3mm, numbers=left, numberstyle=\tiny% number style
+%}
+%% ******** Set the style: **************
+%\lstset{style=matlab}
+
+%\newcommand{\matlab}{{\sc Matlab }} % Or 
+\renewcommand{\matlab}{{\sc Matlab }} 
+
+% \newcommand{\homedir}{/home/aepound}
+% \newcommand{\figdir}{\homedir/figs}  % picture stuff: ps,fig,tex
+%\newtheorem{theorem}{Theorem}
+%\newtheorem{corollary}{Corollary}
+%\newtheorem{lemma}{Lemma}
+
+\title{ECE 6320 - Homework 5
+}
+\author{Andrew Pound}
+\date{\today}
+
+
+
+\begin{document}
+\maketitle
+
+%\begin{abstract}
+%\end{abstract}
+
+
+
+\section{}
+Consider
+\begin{equation*}
+  \begin{split}
+    \xdot(t) &=
+    \begin{bmatrix}
+      -1 & 5 \\ 0 & 2
+    \end{bmatrix}x(t) +
+    \begin{bmatrix}
+      2 \\ 0
+    \end{bmatrix}u(t)\\
+    y(t) &= 
+    \begin{bmatrix}
+      -2 & 4
+    \end{bmatrix}x(t) - 2u(t).
+  \end{split}
+\end{equation*}
+Is it BIBO stable?
+
+\section{}
+Consider a system 
+\begin{equation*}
+  \begin{split}
+    \xdot(t) &=
+    \begin{bmatrix}
+      -2 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & -1
+    \end{bmatrix}x(t) +
+    \begin{bmatrix}
+      1 \\ 0 \\ -1
+    \end{bmatrix}u(t)\\
+    y(t) &= 
+    \begin{bmatrix}
+      1 & 1 & 0
+    \end{bmatrix}x(t) + u(t).
+  \end{split}
+\end{equation*}
+\begin{enumerate}[label=(\alph*)]
+\item Compute the system transfer function.
+\item Is the matrix $A$ asymptotically stable, marginally stable, or unstable?
+\item Is the system BIBO stable?
+\end{enumerate}
+
+
+\section{}
+Is the homogeneous state equation 
+\begin{equation*}
+  \xdot (t)  =
+  \begin{bmatrix}
+    -1 & 0 & 2\\ 0 & 0 & 1 \\ 0 & 0 & 0
+  \end{bmatrix}x(t)
+\end{equation*}
+marginally stable? Asymptotically stable?
+
+
+\section{}
+Is the discrete-time homogenous stat equation
+\begin{equation}
+  x(k+1) =
+  \begin{bmatrix}
+    0.9 & 0 & 2\\ 0 & 1 & 0\\ 0 & 0 & 1
+  \end{bmatrix}x(k)
+\end{equation}
+marginally stable? Asymptotically stable?
+
+
+\section{}
+Consider the linear time varying equation
+\begin{equation}
+  \begin{split}
+    \xdot(t) &= 2tx(t) + u(t) \\
+    y(t) &= e^{-t^2}x(t).
+  \end{split}
+\end{equation}
+Is the equation BIBO stable? Marginally stable? Asymptotically stable?
+
+\section{}
+Conside a LTV system with a state transition matrix $\Phi(t,\tau)$ for
+which 
+\begin{equation*}
+  \Phi(t,0) =
+  \begin{bmatrix}
+    e^t\cos(2t) & e^{-2t}\sin(2t) \\ 
+    -e^{t}\sin(2t) & e^{-2t}\cos(2t)
+  \end{bmatrix}.
+\end{equation*}
+\begin{enumerate}[label=(\alph*)]
+\item Compute the state transition matrix $\Phi(t,t_0)$.
+\item Compute a matrix $A(t)$ that corresponds to the given state
+  transition matrix.
+\item Compute the eigenvalues of $A(t)$.
+\item Classify this system in terms of Lyapunov stability (marginally
+  stable, asymptotically stable, or exponentially stable).
+\end{enumerate}
+
+Hint: In answering part (d), do not be misled by your answer of part (c)
+% \bibliographystyle{ieeetr}
+% \newcommand{\bibdir}{~}
+% \bibliography{\bibdir/~}
+\end{document}
