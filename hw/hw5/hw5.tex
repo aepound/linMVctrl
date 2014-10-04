@@ -82,6 +82,49 @@ Consider
 \end{equation*}
 Is it BIBO stable?
 
+Well, Let's take a look at the transfer function for this system.
+\begin{equation*}
+\begin{split}
+  \hat{G}(s)
+  &= C (sI - A)^{-1}B + D\\
+  &=
+  \begin{bmatrix}
+    -2 & 4
+  \end{bmatrix}
+  \begin{bmatrix}
+    s+1 & 5 \\ 0 & s -2
+  \end{bmatrix}^{-1}
+  \begin{bmatrix}
+    2 \\ 0
+  \end{bmatrix} - 2 \\
+  &= \frac{1}{(s+1)(s-2)}
+  \begin{bmatrix}
+    -2 & 4
+  \end{bmatrix}
+  \begin{bmatrix}
+    s-2 & -5 \\ 0 & s+1
+  \end{bmatrix}
+  \begin{bmatrix}
+    2 \\ 0
+  \end{bmatrix} - 2\\
+  &= \frac{1}{(s+1)(s-2)}
+  \begin{bmatrix}
+    -2 & 4
+  \end{bmatrix}
+  \begin{bmatrix}
+    2(s-2) \\ 0
+  \end{bmatrix} - 2\\
+ &= \frac{1}{(s+1)(s-2)} \left(-4\left(s-2\right)\right) - 2\\
+ &=\frac{-4(s-2)}{(s+1)(s-2)} - 2\\
+ &=\frac{-4}{s+1} + \frac{-2s -2}{s+1}\\
+ &=\frac{-2s -6}{s+1}.
+\end{split}
+\end{equation*}
+Now we can see from looking at $\hat{G}(s)$, that the transfer
+function is proper, and than the pole is located in the Left Half
+Plane (LHP).  That is, the pole is $s = -1$.  Because of this, we can
+say that the system is BIBO stable.
+
 \section{}
 Consider a system 
 \begin{equation*}
@@ -101,8 +144,48 @@ Consider a system
 \end{equation*}
 \begin{enumerate}[label=(\alph*)]
 \item Compute the system transfer function.
+\item[]
+\begin{equation*}
+\begin{split}
+\hat{G}(s) &=
+\begin{bmatrix}
+  1 & 1 & 0
+\end{bmatrix}
+\begin{bmatrix}
+  s+2 & 0 & 0 \\ 0 & s-1 & 0 \\ 0 & 0 & s+1
+\end{bmatrix}^{-1}
+\begin{bmatrix}
+  1 \\ 0 \\ -1
+\end{bmatrix} + 1\\
+&= 
+\begin{bmatrix}
+  1 & 1 & 0
+\end{bmatrix}
+\begin{bmatrix}
+  \frac{1}{s+2} & 0 & 0 \\ 0 & \frac{1}{s-1} & 0 \\ 0 & 0 & \frac{1}{s+1}
+\end{bmatrix}^{-1}
+\begin{bmatrix}
+  1 \\ 0 \\ -1
+\end{bmatrix} + 1\\
+& =
+\begin{bmatrix}
+  1 & 1 & 0
+\end{bmatrix}
+\begin{bmatrix}
+  \frac{1}{s+2} \\ 0 \\ \frac{1}{s+1}
+\end{bmatrix}+1\\
+& = \frac{1}{s+2} + 1 \\ 
+&= \frac{1}{s+2} + \frac{s+2}{s+2} \\
+&= \frac{s+3}{s+2}.
+\end{split}
+\end{equation*}
 \item Is the matrix $A$ asymptotically stable, marginally stable, or unstable?
+This is marginally unstable, because the matrix $A$ has an eigenvalue
+of $\lambda = +1$.
 \item Is the system BIBO stable?
+This transfer function is proper and the pole is at $s= -2$, so it is
+BIBO stable.
+
 \end{enumerate}
 
 
@@ -116,16 +199,35 @@ Is the homogeneous state equation
 \end{equation*}
 marginally stable? Asymptotically stable?
 
+Because the matrix $A$ is in triangular form, we can read off the
+eigenvalues as $\lambda_i = -1, 0, 0$.  Thus the eigenvalue(s) of $0$
+are not simple.  Thus, we can determine that the system is both
+marginally and asymptotically unstable.
 
 \section{}
 Is the discrete-time homogenous stat equation
-\begin{equation}
+\begin{equation*}
   x(k+1) =
   \begin{bmatrix}
     0.9 & 0 & 2\\ 0 & 1 & 0\\ 0 & 0 & 1
   \end{bmatrix}x(k)
-\end{equation}
+\end{equation*}
 marginally stable? Asymptotically stable?
+
+The Jordan form for this matrix is
+\begin{equation*}
+  J =
+  \begin{bmatrix}
+    0.9 & 0 & 0 \\ 0 & 1 & 0\\ 0 & 0 & 1
+  \end{bmatrix}.
+\end{equation*}
+The eigenvalues are then $\lambda_i = 0.9, 1, 1$, and the $1$'s are
+distinct, because there are no super diagonal ones.  Thus, we can say
+that the system is marginally stable, though not asymptotically
+stable.
+
+
+
 
 
 \section{}
@@ -150,6 +252,64 @@ which
 \end{equation*}
 \begin{enumerate}[label=(\alph*)]
 \item Compute the state transition matrix $\Phi(t,t_0)$.
+\item[]
+  Ok, to do this we will use the following properties:
+  \begin{align}
+    \phi(t_2, t_1)\phi(t_1,t_0) &= \phi(t_2, t_0)  & 
+    \phi^{-1}(t,\tau) &= \phi(\tau, t).
+  \end{align}
+Consider that we know $\phi(t,0)$, then let's look at 
+\begin{equation*}
+  \phi(t,t_0)\phi(t_0,0) = \phi(t,0).
+\end{equation*}
+Solve for what we want,
+\begin{equation*}
+  \phi(t,t_0) = \phi(t,0)\phi(0,t_0)^{-1}
+\end{equation*}
+\begin{align*}
+  \phi(t_0,0) & =
+  \begin{bmatrix}
+    e^{t_0}\cos(2t_0) & e^{-2t_0}\sin(2t_0) \\ 
+    -e^{t_0}\sin(2t_0) & e^{-2t_0}\cos(2t_0)
+  \end{bmatrix} \\
+  \phi(t_0,0)^{-1} & =\frac{1}{\det\left(\phi(t_0,0)\right)}
+  \begin{bmatrix}
+    e^{-2t_0}\cos(2t_0) & -e^{-2t_0}\sin(2t_0) \\ 
+    e^{t_0}\sin(2t_0) & e^{t_0}\cos(2t_0)
+  \end{bmatrix} \\
+  &=\frac{1}{e^{-t_0}}
+  \begin{bmatrix}
+    e^{-2t_0}c_0 & -e^{-2t_0}s_0 \\
+    e^{t_0}s_0 & e^{t_0}c_0
+  \end{bmatrix}\\
+  &=
+  \begin{bmatrix}
+    e^{-t_0}c_0 & -e^{-t_0}s_0 \\
+    e^{2t_0}s_0 & e^{2t_0}c_0
+  \end{bmatrix},
+\end{align*}
+where $c_0 = \cos(2t_0)$, and $s_0 = \sin(2t_0)$. Now we can plug back
+in to get the full transition matrix
+\begin{equation*}
+  \begin{split}
+    \phi(t,t_0) &= \phi(t,0)\phi^{-1}(t_0, 0)\\
+    &=
+    \begin{bmatrix}
+      e^tc & e^{-2t} s \\ -e^ts & e^{-2t}c
+    \end{bmatrix}
+    \begin{bmatrix}
+      e^{-t_0}c_0 & -e^{-t_0}s_0 \\
+      e^{2t_0}s_0 & e^{2t_0}c_0
+    \end{bmatrix}\\
+    &= 
+    \begin{bmatrix}
+      e^{t-t_0}cc_0 + e^{-2(t-t_0)}ss_0 & -e^{t-t_0}cs_0 + e
+      ^{-2(t-t_0)}s c_0\\
+      -e^{t-t_0}sc_0 +e^{-2(t-t_0)}cs_0 & e^{t-t_0}ss_0 +
+      e^{-2(t-t_0)}cc_0 
+    \end{bmatrix}
+  \end{split}
+\end{equation*}
 \item Compute a matrix $A(t)$ that corresponds to the given state
   transition matrix.
 \item Compute the eigenvalues of $A(t)$.
@@ -157,7 +317,51 @@ which
   stable, asymptotically stable, or exponentially stable).
 \end{enumerate}
 
-Hint: In answering part (d), do not be misled by your answer of part (c)
+Hint: In answering part (d), do not be misled by your answer of part
+(c)
+
+
+\section{}
+Investigate whether or not the solutions to the following nonlinear
+systems converge to the equilibrium point when they start close enough
+to it.
+
+\begin{enumerate}[label=(\alph*)]
+\item The state space system 
+  \begin{equation*}
+    \begin{split}
+      \xdot_1 &= -x_1 + x_1\left(x_1^2 + x_2^2\right)\\
+      \xdot_2 &= -x_2 + x_2\left(x_1^2 + x_2^2\right)
+    \end{split}
+  \end{equation*}
+with equilibrium points $x_1 = x_2 = 0$.
+\item The second order system $\ddot{w} + g(w)\wdot + w = 0$ with
+  equilibrium point $w = \wdot = 0$. Remember this is not the state
+  space representation (you can put it into sate space form by
+  selecting $x_1 = w$ and $x_2 = \wdot$). Determine for which values
+  of $g(0)$ we can gaurantee convergence to the origin based on the
+  local linearization.
+\end{enumerate}
+
+\section{}
+Consider the continuous-time LTI system
+\begin{equation*}
+  \xdot = Ax, \quad x \in \Rbb^n
+\end{equation*}
+and suppose that there exists a positive constant $\mu$ and
+positive-definite matrices $P,Q \; \in \Rbb^n$ for the Lyapunov
+equation
+\begin{equation*}
+  A^TP + PA + 2\mu P = -Q.
+\end{equation*}
+Show that all the eigenvalues of $A$ have reall parts less than
+$-\mu$. A matrix $A$ with this property is said to be
+\emph{asymptotically stable with stability margin $\mu$}.
+
+\emph{Hint: Start by showing that all the eigenvalues of $A$ have real
+  parts less than $-\mu$ if and only if all eigenvalues of $A+\mu I$
+  have real parts less than $0$. (i.e. $A+\mu I$ is a stability
+  matrix). 
 % \bibliographystyle{ieeetr}
 % \newcommand{\bibdir}{~}
 % \bibliography{\bibdir/~}
