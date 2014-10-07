@@ -1,0 +1,72 @@
+%\standaloneconfig{class=book}
+
+%%%
+% If thin isn't
+%
+%%%
+\makeatletter
+\def\@getcl@ss#1.cls#2\relax{\def\@currentclass{#1}}
+\def\@getclass{\expandafter\@getcl@ss\@filelist\relax}
+\@getclass
+\typeout{This document uses \@currentclass\space class...}
+\@ifclassloaded{usuthesis}% {class}{<true>}{<false>}
+  {}% Don't want to use this, if we're in usuthesis class. 
+  { % If we are NOT being included in the thesis or beamer,
+    % then use these package...
+    \@ifclassloaded{beamer}
+    {}% Don't want to use this in the beamer class, either. 
+    { %
+      \usepackage{fullpage}
+      \usepackage{setspace}
+      \doublespacing
+    }
+  }% 
+
+\usepackage{graphicx}
+\input{symbolmac}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{euscript}
+\usepackage{latexsym}
+\makeatletter
+    \@ifclassloaded{beamer}
+    {}% Don't want to use this in the beamer class, either. 
+    { %
+\usepackage[dvipsnames,usenames]{xcolor}
+}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+
+\makeatother
+\usepackage{subcaption}
+\usepackage{booktabs}
+
+
+% I thought about adding this in to be able to switch between lscape
+% and pdflscape... but decided I didn't need to...
+%\usepackage{ifpdf}
+%\ifpdf
+%\usepackage{pdflscape}
+%\else
+\usepackage{lscape}
+%\fi
+
+%\usepackage{cleveref}
+
+\providecommand{\abs}[1]{\lvert#1\rvert}
+\providecommand{\norm}[1]{\lVert#1\rVert}
+\definecolor{dark-gray}{gray}{0.2}
+\definecolor{light-gray}{gray}{0.3}
+\newcommand{\myrule}{\textcolor{light-gray}{\noindent\rule{\linewidth}{0.07mm}}\\}
+\newcommand{\editmark}{\begin{center}\textcolor{light-gray}{\noindent\rule{\linewidth}{0.07mm}}\\ 
+    To be Edited:\end{center}} 
+\renewcommand{\matlab}{{\sc Matlab }} 
+\newcommand{\edit}[1]{\editmark \textcolor{dark-gray}{#1}\\\myrule}
+%\newcommand{\comment}[1]{}
+\newcommand{\nochapbibs}[1]{#1}
+\newcommand{\etal}{et~al.~}
+
+%\usepackage{comment}
+
+
+

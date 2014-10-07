@@ -1,0 +1,237 @@
+
+\documentclass{article}
+\input{commonheader}
+\usepackage{comment}
+
+\usepackage{enumitem}
+
+\newenvironment{matlabc}{}{}
+\newenvironment{octavec}{}{}
+\excludecomment{matlabc}
+%\newenvironment{matlabv}{\verbatim}{\endverbatim}
+%\newenvironment{octavev}{\verbatim}{\endverbatim}
+
+
+% ******** For code: ******************
+\usepackage{listings}
+%\usepackage[usenames,dvipsnames]{color}
+% ******** Define the language: *******
+\lstdefinelanguage{matlabfloz}{%
+	alsoletter={...},%
+	morekeywords={% 						% keywords
+	break,case,catch,continue,elseif,else,end,for,function,global,%
+	if,otherwise,persistent,return,switch,try,while,...,
+        classdef,properties,methods},%
+	comment=[l]\%,% 						% comments
+	morecomment=[l]...,% 					% comments
+	morestring=[m]',%   						% strings 
+}[keywords,comments,strings]%
+\lstdefinestyle{matlab}{language=matlabfloz,							
+		keywordstyle=\color[rgb]{0,0,1},					
+		commentstyle=\color[rgb]{0.133,0.545,0.133},	% comments
+		stringstyle=\color[rgb]{0.627,0.126,0.941},	% strings
+		numbersep=3mm, numbers=left, numberstyle=\tiny% number style
+}
+% ******** Set the style: **************
+\lstset{style=matlab}
+
+%\title{ECE 6320: Homework 6}             
+%\author{Andrew Pound}
+%\date{\input{date.tex}}
+
+\begin{document}
+%\maketitle
+
+These are Dean's notes that I've copied...
+\section{Internal Stability}
+\begin{equation}
+  \xdot = Ax
+\end{equation}
+\begin{tabular}{ll}
+$x(t)$ is bounded & (Marginally stable)\\
+$x(t) \rightarrow 0$ as $t\rightarrow\infinity$ & (Asymptotically
+stable)\\
+$x(t) \stackrel{exp}{\rightarrow} 0$ as $t\rightarrow\infinity$ &
+(Exponentially stable)
+\end{tabular}
+
+\section{Positive Definite Matrices}
+For a symmetric matrix $Q$, $Q^T = Q$ for any non-zero vector $x$, 
+\begin{equation*}
+  \begin{split}
+  x^TQx \le 0 & \Rightarrow \text{NSD} \\
+  x^TQx < 0   & \Rightarrow \text{ND} \\
+  x^TQx \ge 0 & \Rightarrow \text{PSD} \\
+  x^TQx > 0   & \Rightarrow \text{PD} 
+  \end{split}
+\end{equation*}
+
+All eigenvalues of PD matrix  $Q$ are strictly positive.
+\begin{equation}
+  \lambda_{min}[Q]\norm{x}^2 \le x^TQx \le \lambda_{max}[Q]\norm{x}^2
+\end{equation}
+
+
+\section{Lyapunov Stability Theorem}
+\begin{equation}
+  \xdot = Ax \rightarrow \text{HCLTI},
+\end{equation}
+is asymptotically stable (AS)
+
+\begin{enumerate}
+\item The system (H-CLTI) is asymptotically stable (AS)
+\item The system (H-CLTI) is exponentially stable
+\item All the eigenvalues of $A$ have strictly negative real parts
+\item For every symmetric PD matrix $Q$, there exists a uniques
+  solution $P$ to the following Lyapunov Equation
+  \begin{equation}
+  A^TP + PA = -Q.
+  \end{equation}
+\item $A^TP + PA < 0$.
+\end{enumerate}
+
+
+
+
+\section{Proof:}
+
+\subsection{(2) $\rightarrow$ (4)}
+\begin{equation}
+  P = \int_0^\infinity e^{A^Tt}Qe^{At} dt \qquad \rightarrow
+\end{equation}
+is a unique solution to $A^TP + PA = -Q$.
+Let's verify:
+\begin{equation}
+  \int_0^\infinity \left(A^Te^{A^Tt}Qe^{At} + e^{At}Qe^{At}A\right) dt 
+   = 
+\end{equation}
+$P$ is symmetric since $P^T = P$.
+
+Let $z$ be a non-zero number, 
+\begin{equation}
+  z^TPz = \int_0^\infinity \underbrace{z^Te^{A^Tt}}_{w^T(t)}Q
+  \underbrace{e^{At}z}_{w(t)} dt = \int_0^\infinity w^T(t)Qw(t)dt > 0
+\end{equation}
+
+\subsection{Does (4) $\rightarrow$ (2)?}
+\begin{equation}
+  P = \int_0^\infinity e^{At}Qe^{At}dt
+\end{equation}
+is solution of $P^TA+Pa = -Q \rightarrow$ exponentially stable?
+
+$v(t) = x^T(t)Px(t) = 0$ iff $x = 0,$ otherwise $>0$.
+
+\begin{equation}
+  \vdot(t) = \xdot^Tpx + x^TP\xdot = (Ax)^Tpx + x^TPAx 
+  = x^T\left[A^TP + PA\right]x = -x^TQx < 0\rightarrow \text{
+    Asymptotically stable}
+\end{equation}
+
+Is it exponentially stable as well?
+\begin{equation}
+  v(t) = x^T(t) P x(t) \le v(0) = x^T(0)Px(0), \qquad t \ge 0
+\end{equation}
+
+%\subsection{Show that (4) $\rightarrow$ (2)}
+
+\begin{equation}
+  v(t) = x^T(t)Px(t) \ge \lambda_{min}[P] \Vert x\Vert^2\qquad ,\qquad
+  x^T(t)Px(t) \le \lambda_{max}[P]\Vert x(t)\Vert^2 
+\end{equation}
+\begin{equation}
+  v(t) \rightarrow \frac{x^T(t)Px(t)}{\lambda_{min}[P]} \ge \Vert x
+  \Vert^2 \qquad \qquad v(t)\rightarrow
+  \frac{x^TPx(t)}{\lambda_{max}[P]}\le 
+  \Vert x(t)\Vert^2 
+\end{equation}
+So, 
+\begin{equation}
+  \norm{x(t)}^2 \le \frac{v(t)}{\lambda_{min}[P]} \le
+  \frac{v(0)}{\lambda_{min}[P]} 
+\end{equation}
+\begin{equation}
+  \vdot (t) = -x^T(t)Qx(t) \le -\lambda_{min}[Q]\norm{x(t)}^2
+\end{equation}
+\begin{equation}
+  \boxed{\vdot(t) \le \frac{-\lambda_{min}[Q]}{\quad\lambda_{max}[P]}v(t) =
+    \mu v(t)}
+\end{equation}
+
+\section{Comparison Lemma}
+Let v(t) be a differentiable scalar signal for which 
+\begin{equation}
+  \vdot(t) \le \mu v(t) \qquad \forall \;\; t \ge t_o \qquad\text{for
+    constant } \mu \in \Rbb.
+\end{equation}
+Then the solution 
+\begin{equation}
+  v(t) \le e^{\mu(t-t_0)}v(t_0) \quad \forall \; t \ge t_0.
+\end{equation}
+
+So 
+\begin{equation}
+  v(t) \le e^{\lambda(t - t_0)}v(t_0) \quad t\ge t_0, \qquad \lambda =
+    \frac{\lambda_{min}[Q]}{\lambda_{max}[P]} 
+\end{equation}
+goes exponentially to 0.
+
+\subsection{(5) Prove it!}
+
+\begin{equation}
+  \begin{split}
+    A^TP + P A &< 0\\
+    Q &= I
+  \end{split}
+\end{equation}
+
+\section{Discrete-Time case (H-DLTI)}
+\begin{equation}
+  \begin{split}
+    x[k+1] &= Ax[k] + Bu[k] \qquad t = k^T + t_0\\
+    y[k] &= Cx[k] + Du[k]
+  \end{split}
+\end{equation}
+\subsection{Definitions for stability}
+\begin{enumerate}
+\item Marginally stable $x[k] = \phi[k,k_0]x[t_0]$.
+ \item Asymptotically stable $x[k] \rightarrow 0$.
+\item Exponentially stable $\norm{x[k]} \le C\lambda$.   ?
+\end{enumerate}
+
+\subsection{Lyapunov conditions}
+
+\begin{equation}
+  A^TPA - P = -Q
+\end{equation}
+
+*Hint on how to prove this:
+\begin{equation}
+  \begin{split}
+    v[k] &= x[k]^TPx[k]\\
+    v[k+1] &= x^T[k+1]Px[k+1]
+  \end{split}
+\end{equation}
+
+\section{Linearizes System}
+
+\begin{align}
+  \xdot &= f(x) & A&= \left.\partiald{f}{x}\right|_{x = x^{eq}} &
+  f(x^{eq}) &=0 \\
+  \delta\xdot = A\delta x
+\end{align}
+
+Boundary that we can apply stability conditions (Are we close enough
+to $x^{eq}$?)
+
+Assume that $\xdot = f(x), f(x)$ is twice differentiable.
+If the linearized system ($\delta\xdot = A\delta x$) is exponential
+stable, then there exists a ball $B \in \Rbb^n$ around $x^{eq}$ and
+constants $c,\lambda > 0$ such that for every solution of $x(t)$ to
+the system ($\xdot = f(x)$) that starts in $x(t_0 \in B,$ we have
+\begin{equation}
+  \norm{x(t) - x^{eq}} \le ce^\lambda(t-t_0) \norm{x(t_0) - x^{eq}}
+  \qquad \forall \; t \ge t_0.
+\end{equation}
+
+Note: $x(t) - x^{eq} = \delta x$.
+\end{document}
