@@ -240,8 +240,40 @@ Consider the linear time varying equation
 \end{equation}
 Is the equation BIBO stable? Marginally stable? Asymptotically stable?
 
+First, we need to find the transition matrix.
+So, solving the homogenous equation, we get 
+\begin{equation*}
+\begin{split}
+\frac{dx}{dt} &= 2tx(t) \\ 
+\int \frac{1}{x(t)}dx &= \int 2t dt\\
+\ln(x(t)) &= t^2 + C\\
+x(t) &= Ce^{t^2}\\
+&= x(t_0)e^{(t-t_0)^2}.
+\end{split}
+\end{equation*}
+So, the fundamental matrix is $X = x(t_0)e^{(t-t_0)^2}$.
+Then, we get 
+\begin{equation*}
+  \Phi(t,\tau) = X(t) X^{-1}(\tau) =
+  x(t_0)e^{(t-t_0)^2}\cdot\frac{1}{x(t_0)}e^{-(\tau - t_0)^2}
+ = e^{t^2 - 2tt_0 - \tau^2 + 2\tau t_0}
+\end{equation*}
+Then the transfer function is
+\begin{equation*}
+  G(t,\tau) = e^{-t^2}e^{t^2 - 2tt_0 - \tau^2 + 2\tau t_0}
+  = e^{-t^2 + t^2 - 2tt_0 - \tau^2 + 2\tau t_0}
+\end{equation*}
+And to check BIBO:
+\begin{equation*}
+  \int \Vert e^{-t^2 + t^2 - 2tt_0 - \tau^2 + 2\tau
+    t_0}\Vert d\tau \le M < \infinity
+\end{equation*}
+
+This system is not BIBO stable, because of the $2\tau t_0$ term in the
+exponent, which grows without bound.
+
 \section{}
-Conside a LTV system with a state transition matrix $\Phi(t,\tau)$ for
+Consider a LTV system with a state transition matrix $\Phi(t,\tau)$ for
 which 
 \begin{equation*}
   \Phi(t,0) =
@@ -307,6 +339,13 @@ in to get the full transition matrix
       ^{-2(t-t_0)}s c_0\\
       -e^{t-t_0}sc_0 +e^{-2(t-t_0)}cs_0 & e^{t-t_0}ss_0 +
       e^{-2(t-t_0)}cc_0 
+    \end{bmatrix}\\
+    &= 
+    \begin{bmatrix}
+      e^{t-t_0}\cos(2t)\cos(2t_0) + e^{-2(t-t_0)}\sin(2t)\sin(2t_0) 
+      & -e^{t-t_0}\cos(2t)\sin(2t_0) + e^{-2(t-t_0)}\sin(2t) \cos(2t_0)\\
+      -e^{t-t_0}\sin(2t)\cos(2t_0) +e^{-2(t-t_0)}\cos(2t)\sin(2t_0) 
+      & e^{t-t_0}\sin(2t)\sin(2t_0) +e^{-2(t-t_0)}\cos(2t)\cos(2t_0) 
     \end{bmatrix}
   \end{split}
 \end{equation*}
@@ -354,14 +393,50 @@ equation
 \begin{equation*}
   A^TP + PA + 2\mu P = -Q.
 \end{equation*}
-Show that all the eigenvalues of $A$ have reall parts less than
+Show that all the eigenvalues of $A$ have real parts less than
 $-\mu$. A matrix $A$ with this property is said to be
 \emph{asymptotically stable with stability margin $\mu$}.
 
 \emph{Hint: Start by showing that all the eigenvalues of $A$ have real
   parts less than $-\mu$ if and only if all eigenvalues of $A+\mu I$
   have real parts less than $0$. (i.e. $A+\mu I$ is a stability
-  matrix). 
+  matrix). }
+
+Ok, Let's take a look at the Lyapunov equation
+\begin{equation*}
+  \begin{split}
+    A^TP + PA + 2\mu P &= -Q \\
+    A^TP + 2\mu P + PA + 2\mu P &= -Q\\
+    (A + \mu I)^TP + P(A + \mu I) &= -Q\\
+    x^T\left[(A + \mu I)^TP + P(A + \mu I)\right]x &= -x^TQx\\
+    x^T(A + \mu I)^TPx + xP(A + \mu I)x &= -x^TQx\\
+    x^T(A + \mu I)^TPx + xP^T(A + \mu I)x &= -x^TQx\\
+    2xP^T(A + \mu I)x &= -x^TQx.
+  \end{split}
+\end{equation*}
+Ok, now taking a look at this the right hand side is at most $0$,
+because $Q$ is positive definite.  That means the left hand side is
+bounded by $0$ also.  That means that the matrix $P^T(A + \mu I)$ is
+negative semi-definite.  But $P$ is also positive definite, thus
+leaving $B = (A - \mu I)$ to be the quantity that is negative
+semi-definite.   Thus we know that the eigenvalues of $B$ must be
+nonpositive. 
+
+The eigenvalues of $B$ are then given as the solutions to the equation
+\begin{equation*}
+  0 = \det(sI - B) = \det(sI - A - \mu I) = \det\left((s - \mu)I -
+    A\right) = \det(\gamma I - A).
+\end{equation*}
+Looking at this carefully, we can see that the eigenvalues of $B$, all
+have real part less than zero: $s \le 0$.  Thus, considering the
+equation below for the substitution for 
+the eigenvalues of $A$,   
+\begin{equation*}
+  \gamma = s - \mu,
+\end{equation*}
+all $\gamma_i$'s (the eigenvalues of $A$) must have real part less
+than or equal to $-\mu$. 
+
 % \bibliographystyle{ieeetr}
 % \newcommand{\bibdir}{~}
 % \bibliography{\bibdir/~}
