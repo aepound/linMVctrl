@@ -3,6 +3,7 @@
 \input{commonheader}
 \usepackage{comment}
 
+\usepackage{enumitem}
 
 \newenvironment{matlabc}{}{}
 \newenvironment{octavec}{}{}
@@ -75,7 +76,13 @@ Assume that the motor drives one pair of the wheels of the cart, so that
 the whole cart, pendulum and all, becomes the load on the motor. The
 differential equations of this system are written as
 \begin{equation*}
-  
+  \begin{split}
+    \xddot + \frac{k^2}{Mr^2R}\xdot + \frac{mg}{M}\theta 
+    &= \frac{k}{MRr} \\
+    \thetaddot - \left(\frac{M+m}{Ml}\right)g\theta -
+    \frac{k^2}{Mr^2Rl}\xdot 
+    &= \frac{k}{MRrl}e
+  \end{split}
 \end{equation*}
 where $k$ is the motor torque constant, $R$ is the motor resistance, 
 $r$ is the ratio of motor torque to linear force applied to the cart
@@ -90,17 +97,16 @@ and $r = 0.02m$.
 The gains for stablizing the inverted pendulum on a motor-driven cart
 are to be optimized using a performance criterion of the form
 \begin{equation*}
-  
+  J_{lqr} = \int_0^\infinity (q_1^2x_1^2 + q_3^2x_3^2 + r^2u^2)dt
 \end{equation*}
 
-A pendulum angle much greater than 1 degree =0.0017 rad would be
+A pendulum angle much greater than $1 degree =0.0017 rad$ would be
 precarious. Thus a heavy weighting on $\theta = x_3$ is indicated: 
 $q^2_3 =\frac{1}{(0.017)^2 }\approx 3000$. For the physical dimensions
-of the system, a position error of the order 10cm = 0.1m is not
-unreasonable. Hence  $q^2_11 =\frac{1}{(0.1)^2} =
-100$.
+of the system, a position error of the order $10cm = 0.1m$ is not
+unreasonable. Hence  $q^2_1 =\frac{1}{(0.1)^2} =100$.
 
-\begin{enumerate}
+\begin{enumerate}[label=(\alph*)]
 \item Using these values of $q_1^2$ and $q_3^2$ determine and plot the
   gain matrices, corresponding closed loop poles, states $x(t)$ and
   $u(t)$ (for same initial conditions) as a function of the control
@@ -108,14 +114,18 @@ unreasonable. Hence  $q^2_11 =\frac{1}{(0.1)^2} =
   Inverted pendulum on cart \matlab example covered in the class
   (follow ``IPonCartLqrPlots.m'' (main executable file) and
   ``InvertedPendulumonCartLQR.m'' in ``Optimal Control.zip''.
+\item[]
+
 \item Repeat part (a) for a veavier weighting: $q_1^2 = 10^4$ on the
   cart displacement.
+\item[]
 \item (Optional: Bonus 20 points) Change the inverted pendulum on cart
   simulator for this problem and generate simulation videos for both
   the cases. Download ``Optimal Control.zip'' and use ``param.m''
   (change the parameters based on this problem), ``controller.m'',
-  ``pendulum.m'', ``drawPendulum.m'', and ``pendulum_animation.mdl''
+  ``pendulum.m'', ``drawPendulum.m'', and ``pendulum\_animation.mdl''
   (similink file).
+\item[]
 \end{enumerate}
 
 
