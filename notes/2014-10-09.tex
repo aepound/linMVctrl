@@ -1,0 +1,287 @@
+\documentclass[10pt]{article}
+%\input{page}
+\usepackage{fullpage}	% Does about the same as the \input{page}...
+% ^ part of the preprint package...
+
+\input{symbolmac}
+
+\usepackage{amsmath}
+\usepackage{amssymb}  	% provides Rbb, etc.
+\usepackage{latexsym}  	% provides \Box
+%\usepackage{theorem} \input{proof}
+%\pagestyle{empty}
+\usepackage{graphicx} 	% for inserting graphics.
+%\usepackage{booktabs}	% for fancy tabular environments and stuff
+%\usepackage{subfig}	% for subfigures... 
+%(This breaks Beamer if the patch isn't applied!!)
+%usepackage{hyperref}
+
+
+%% ******** For code: ******************
+%\usepackage{listings}
+%\usepackage[usenames,dvipsnames]{color}
+%% ******** Define the language: *******
+%\lstdefinelanguage{matlabfloz}{%
+%	alsoletter={...},%
+%	morekeywords={% 						% keywords
+%	break,case,catch,continue,elseif,else,end,for,function,global,%
+%	if,otherwise,persistent,return,switch,try,while,...,
+%        classdef,properties,methods},%
+%	comment=[l]\%,% 						% comments
+%	morecomment=[l]...,% 					% comments
+%	morestring=[m]',%   						% strings 
+%}[keywords,comments,strings]%
+%\lstdefinestyle{matlab}{language=matlabfloz,							
+%		keywordstyle=\color[rgb]{0,0,1},					
+%		commentstyle=\color[rgb]{0.133,0.545,0.133},	% comments
+%		stringstyle=\color[rgb]{0.627,0.126,0.941},	% strings
+%		numbersep=3mm, numbers=left, numberstyle=\tiny% number style
+%}
+%% ******** Set the style: **************
+%\lstset{style=matlab}
+
+%\newcommand{\matlab}{{\sc Matlab }} % Or 
+\renewcommand{\matlab}{{\sc Matlab }} 
+
+% \newcommand{\homedir}{/home/aepound}
+% \Newcommand{\figdir}{\homedir/figs}  % picture stuff: ps,fig,tex
+%\newtheorem{theorem}{Theorem}
+%\newtheorem{corollary}{Corollary}
+%\newtheorem{lemma}{Lemma}
+
+\usepackage{wrapfig}
+
+\title{}
+\author{}
+\date{Sept. 2, 2014}
+
+
+
+\begin{document}
+\maketitle
+
+Note: There was a minus sign error in HW6.
+
+\section{Next HW: HW7}
+You will need to edit just 2 files: \emph{param.m} and
+\emph{differential\_control file} (Don't know the name exactly, but
+it's what does the controlling...).
+
+Start with \emph{param.m} and fill in where there are question marks.
+
+Also of note: there is a function to do the $z = R(\psi)u_p$ part (as
+on slide 12 in lecture slides/notes) - it is implemented in
+\emph{Rv\_v1.m}. 
+
+\section{Review for test on Tuesday}
+
+\subsection{Prob 2 on practice exam}
+\begin{equation}
+  \xdot = A(t)x, \qquad x(0) = x_0
+\end{equation}
+We also know the state transition matrix $\phi(t,\tau)$.
+Then this is fed in as the input to another system
+\begin{equation}
+  \zdot = A(t)z + x(t), \qquad z(0) = z_0.
+\end{equation}
+Compute x(t) and z(t) as a function of $x_0$ and $z_0$.
+
+\paragraph{Answer}
+This is an LTV system, so the solution of the first system is given by 
+\begin{equation}
+  x(t) = \phi(t,0)x_0.
+\end{equation}
+\begin{wrapfigure}[11]{r}{.4\textwidth}
+\fbox{\begin{minipage}{\dimexpr\linewidth-2\fboxrule-2\fboxsep}
+ Remember: The state transition matrix $\phi(t,\tau)$ is always found
+ on the  homogeneous system  (i.e. with zero input).  Then the general
+ solution is
+ \begin{equation*}
+   x(t) = \phi(t,0)x_0 + \int_0^t\phi(t,\tau)B(\tau)d\tau.
+ \end{equation*}
+\end{minipage}}
+\end{wrapfigure}
+
+Then we got
+\begin{equation*}
+  \zdot = A(t)z + x(t).
+\end{equation*}
+And because this uses the same $A$ matrix, we know that the solution
+is just the same as for the $x(t)$ system
+\begin{equation*}
+  z(t) = \phi(t,0)z_0 + \int_0^t\phi(t,\tau)x(\tau)d\tau.
+\end{equation*}
+And plugging in for $x(t)$, we get
+\begin{equation*}
+  \begin{split}
+    z(t) &= \phi(t,0)z_0 + \int_0^t\phi(t,\tau)\phi(\tau,0)x_0d\tau \\
+    &= \phi(t,0)z_0 + \int_0^t\phi(t,\tau)\phi(\tau,0)x_0d\tau\\
+    &= \phi(t,0)z_0 + \int_0^t\phi(t,0)x_0d\tau\\
+    &= \phi(t,0)z_0 + \phi(t,0)x_0\int_0^td\tau\\
+    &= \phi(t,0)z_0 + \phi(t,0)x_0t.
+  \end{split}
+\end{equation*}
+
+\subsection{Linearity}
+
+If $y = f(x)$, and $f$ is linear with respect to $x$, then we can say
+that 
+\begin{align*}
+  x &= c_1x_1 + c_2x_2 \qquad \qquad\qquad \Rightarrow  & y &= c_1f(x_1) + c_2f(x_2).
+\end{align*}
+
+\subsection{LTI systems}
+\begin{equation*}
+  \begin{split}
+    \xdot &= Ax(t) + Bu(t) \\
+    y  &= Cx(t) + Du(t)
+  \end{split}
+\end{equation*}
+First, find the solution to the Homogeneous problem $\xdot = Ax(t)$:
+\begin{equation*}
+  x(t) = e^{At}x_0.
+\end{equation*}
+Side note: to then find $A$, differentiate:
+\begin{equation*}
+  A = \left.\frac{d}{dt} e^{At}\right|_{t=0} = \left.Ae^{At}\right|_{t=0}.
+\end{equation*}
+
+\paragraph{solution}
+\begin{equation*}
+  x(t) = e^{Ar}x_0 + \int_0^te^{A(t-\tau)}Bu(\tau)d\tau
+\end{equation*}
+The transfer function is:
+\begin{equation*}
+  \hat{g}(s) = C(sI - A)^{-1}B + D.
+\end{equation*}
+The inpulse response:
+\begin{equation*}
+  g(t) = \mathcal{L}^{-1}(\hat(g)(s)).
+\end{equation*}
+May want to look over the derivation of this...
+\begin{equation*}
+  y(t) = \int_0^tg(t-\tau)u(\tau)d\tau
+\end{equation*}
+and 
+\begin{equation*}
+  \hat{y}(s) = \hat{g}(s)\hat{u}(s).
+\end{equation*}
+
+
+\subsection{LTV systems}
+\begin{equation*}
+  \begin{split}
+    \xdot &= A(t)x(t) + B(t)u(t) \\
+    y  &= C(t)x(t) + D(t)u(t)
+  \end{split}
+\end{equation*}
+
+There are no transfer functions. and the eigenvalues don't indicate
+stability. 
+
+\paragraph{solution}
+\begin{equation*}
+  y(t) = C(t) \phi(t,t_0)x_o +
+  \int_{t_0}^t\phi(t,\tau)B(\tau)u(\tau)d\tau
+\end{equation*}
+
+\begin{equation*}
+  \xdot(t) = A(t)x(t) 
+\end{equation*}
+has size $n$.
+
+Choose Linearly independent initial conditions at $t =0$, of which we
+need $n$, to be able to form the fundamental matrix $X(t)$.
+Thus,
+\begin{align*}
+  x_{01} &\rightarrow x(t)_1\\
+  x_{02} &\rightarrow x(t)_2
+\end{align*}
+and 
+\begin{equation*}
+  X(t) =
+  \begin{bmatrix}
+    x(t)_1 & x(t)_2
+  \end{bmatrix}.
+\end{equation*}
+Then find $X^{-1}(t_0)$, to find
+\begin{equation*}
+  \phi(t,t_0) = X(t) X^{-1}(t_0).
+\end{equation*}
+Some properties of the state transistion matrix $\phi(t,t_0)$:
+\begin{align*}
+  \phi(t,t) &= I & \frac{d}{dt}\phi(t,t_0) = A\phi(t,t_0)\\
+  \phi(\tau,\tau) &= I 
+\end{align*}
+
+\subsection{Linearization}
+\begin{align*}
+  \xdot &= f(x,u) \\
+  y &= h(x)
+\end{align*}
+Then we want to look at the solution around some point
+$(x^{eq},u^{eq})$, or trajectory $(x^{traj},u^{traj})$.
+Then we can define the following variables and state equations:
+\begin{align*}
+  \delta x &= x - x^{eq}&   \delta\xdot &= A\delta x + B \delta u\\
+  \delta u &= u - u^{eq}&   \delta y &= C\delta x
+  \delta y &= y - y^{eq}&
+\end{align*}
+where
+\begin{align*}
+  A &= \left.\partiald{f}{x}\right|_{(x^{eq},u^{eq})}&
+  B &= \left.\partiald{f}{u}\right|_{(x^{eq},u^{eq})}\\
+  C &= \left.\partiald{h}{x}\right|_{(x^{eq},u^{eq})}
+\end{align*}
+
+\subsection{Stability}
+
+\subsubsection{Internal/Lyapunov}
+Three kinds:
+\begin{enumerate}
+\item Marginally stable
+\item Exponentiall/Asymptotically stable
+\item Unstable
+\end{enumerate}
+
+\paragraph{Marginal stability}
+Look at the eigenvalues:
+$\text{real}(\lambda_i) < 0$, and $\lambda_i = 0$ are all simple
+roots. 
+For Dicrete time systems, $\left|\lambda_i\right| < 1$. 
+
+Lyapunov constraints:
+\begin{equation*}
+  PA + A^TP = -Q, \qquad \forall \text{Positive Definite } Q. 
+\end{equation*}
+
+( We may need to find Jordan form for $2\times 2$ or $3\times 3$
+matrices iff $\lambda$'s $= 0$.)
+\paragraph{Asymptotic stability}
+$x\rightarrow 0$.
+
+
+\paragraph{Instability}
+Unbounded...
+
+\subsubsection{BIBO stability}
+\begin{equation*}
+  y(t) = \int_0^\infinity g(\tau) u(t - \tau) d\tau 
+\end{equation*}
+if $\left\Vert u(t)\right\Vert \le M<\infinity$.
+If something is internally stable, then it is BIBO stable.
+\paragraph{Time domain criteria}
+\begin{equation*}
+  \int_0^\infinity \left|g(\tau)\right|d\tau < \infinity.
+\end{equation*}
+
+\paragraph{S-domain criteria}
+\begin{equation*}
+  g(s) = \frac{d(s)}{n(s)}
+\end{equation*}
+Consider the poles of $n(s)$, and if all the noncanceled poles of
+$n(s)$ are strictly in the LHP, then it it BIBO stable.
+
+
+
+\end{document}
