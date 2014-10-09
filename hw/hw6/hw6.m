@@ -78,7 +78,7 @@ differential equations of this system are written as
 \begin{equation*}
   \begin{split}
     \xddot + \frac{k^2}{Mr^2R}\xdot + \frac{mg}{M}\theta 
-    &= \frac{k}{MRr} \\
+    &= \frac{k}{MRr}e \\
     \thetaddot - \left(\frac{M+m}{Ml}\right)g\theta -
     \frac{k^2}{Mr^2Rl}\xdot 
     &= \frac{k}{MRrl}e
@@ -90,7 +90,8 @@ $r$ is the ratio of motor torque to linear force applied to the cart
 state vector and input be defined $x = [x, \dot{x}, \theta,\thetadot]$
  and $u = e$. The parameters for simulation
 are
-$m = 0.1kg, M = 1.0kg, l = 1.0m,g = 9.8ms^{-2}, k = 1V, R = 100\Omega,$
+$m = 0.1kg$, $M = 1.0kg$, $l = 1.0m$, $g = 9.8ms^{-2}$, $k = 1V$, $R =
+100\Omega$,  
 and $r = 0.02m$.
 
 
