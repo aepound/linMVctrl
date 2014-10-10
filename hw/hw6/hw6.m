@@ -1,4 +1,4 @@
-% %{
+%{
 \documentclass{article}
 \input{commonheader}
 \usepackage{comment}
@@ -18,15 +18,15 @@
 % ******** Define the language: *******
 \lstdefinelanguage{matlabfloz}{%
 	alsoletter={...},%
-	morekeywords={% 						% keywords
+	morekeywords={% 					% keywords
 	break,case,catch,continue,elseif,else,end,for,function,global,%
 	if,otherwise,persistent,return,switch,try,while,...,
         classdef,properties,methods},%
-	comment=[l]\%,% 						% comments
+	comment=[l]\%,% 					% comments
 	morecomment=[l]...,% 					% comments
-	morestring=[m]',%   						% strings 
+	morestring=[m]',%   					% strings 
 }[keywords,comments,strings]%
-\lstdefinestyle{matlab}{language=matlabfloz,							
+\lstdefinestyle{matlab}{language=matlabfloz,	
 		keywordstyle=\color[rgb]{0,0,1},					
 		commentstyle=\color[rgb]{0.133,0.545,0.133},	% comments
 		stringstyle=\color[rgb]{0.627,0.126,0.941},	% strings
@@ -111,36 +111,76 @@ unreasonable. Hence  $q^2_1 =\frac{1}{(0.1)^2} =100$.
 \item Using these values of $q_1^2$ and $q_3^2$ determine and plot the
   gain matrices, corresponding closed loop poles, states $x(t)$ and
   $u(t)$ (for same initial conditions) as a function of the control
-  weighting parameter $r^2$ for $0.001 < r^2 < 50$. Use can follow the
+  weighting parameter $r^2$ for $0.001 < r^2 < 50$. You can follow the
   Inverted pendulum on cart \matlab example covered in the class
   (follow ``IPonCartLqrPlots.m'' (main executable file) and
   ``InvertedPendulumonCartLQR.m'' in ``Optimal Control.zip''.
 \item[]
 To avoid confusion, we will let our state vector be denoted 
-$\vbf = \left[\begin{smallmatrix} x & \xdot & \theta &
-    \thetadot \end{smallmatrix}\right]^T$.
-We can put the above equations into Linear form by
-\providecommand{\vdotbf}{\dot{\vbf}}
-\begin{equation*}
-  \begin{split}
-    \vdotbf &=
-    \underbrace{\begin{bmatrix}
-      0 & 1 & 0 & 0\\
-      0 & -\frac{k^2}{Mr^2Rl} & -\frac{mg}{M} & 0\\
-      0 & 0 & 0 & 1\\
-      0 & \frac{k^2}{Mr^2Rl} & \left(\frac{M+m}{ml}\right)g & 0\\
-    \end{bmatrix}}_A\vbf +\underbrace{
-    \begin{bmatrix}
-      0 \\ \frac{k}{MRr} \\ 0 \\ -\frac{k}{MRrl}
-    \end{bmatrix}}_Bu\\
-  \ybf &= I_4\vbf.
-  \end{split}
-\end{equation*}
+$\xbf = \left[\begin{smallmatrix} y & \ydot & \theta &
+    \thetadot \end{smallmatrix}\right]^T$.  Thus, $y$ is our
+position. 
 
 
-    % \begin{bmatrix}
-    %   \xdot \\ \xddot \\ \thetadot \\ \thetaddot
-    % \end{bmatrix}
+\begin{lstlisting}
+%}  
+close all 
+N=10;
+c=linspace(0.1,100,N); % This is actually r^2.
+for i=1:N
+   [T,X,K,E]=InvertedPendulumLQR(c(i));
+   u=-K*X';
+    figure (1)
+plot(E,'o')
+title('Poles vs c')
+xlabel('real')
+ylabel('Img')
+grid on
+hold on
+figure (2)
+plot (T,X(:,1))
+title('theta')
+grid on
+hold on
+figure (3)
+plot(T,X(:,2))
+title ('\dot\theta')
+grid on
+hold on
+    figure(4) 
+    plot (T,u)
+    title('control input')
+    grid on
+    hold on
+end
+
+%{
+\end{lstlisting}
+
+
+
+% We can put the above equations into Linear form by
+% \providecommand{\vdotbf}{\dot{\vbf}}
+% \begin{equation*}
+%   \begin{split}
+%     \vdotbf &=
+%     \underbrace{\begin{bmatrix}
+%       0 & 1 & 0 & 0\\
+%       0 & -\frac{k^2}{Mr^2Rl} & -\frac{mg}{M} & 0\\
+%       0 & 0 & 0 & 1\\
+%       0 & \frac{k^2}{Mr^2Rl} & \left(\frac{M+m}{ml}\right)g & 0\\
+%     \end{bmatrix}}_A\vbf +\underbrace{
+%     \begin{bmatrix}
+%       0 \\ \frac{k}{MRr} \\ 0 \\ -\frac{k}{MRrl}
+%     \end{bmatrix}}_Bu\\
+%   \ybf &= I_4\vbf.
+%   \end{split}
+% \end{equation*}
+
+
+% \begin{bmatrix}
+%   \xdot \\ \xddot \\ \thetadot \\ \thetaddot
+% \end{bmatrix}
 
 
 \item Repeat part (a) for a veavier weighting: $q_1^2 = 10^4$ on the
