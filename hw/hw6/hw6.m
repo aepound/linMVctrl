@@ -116,6 +116,32 @@ unreasonable. Hence  $q^2_1 =\frac{1}{(0.1)^2} =100$.
   (follow ``IPonCartLqrPlots.m'' (main executable file) and
   ``InvertedPendulumonCartLQR.m'' in ``Optimal Control.zip''.
 \item[]
+To avoid confusion, we will let our state vector be denoted 
+$\vbf = \left[\begin{smallmatrix} x & \xdot & \theta &
+    \thetadot \end{smallmatrix}\right]^T$.
+We can put the above equations into Linear form by
+\providecommand{\vdotbf}{\dot{\vbf}}
+\begin{equation*}
+  \begin{split}
+    \vdotbf &=
+    \underbrace{\begin{bmatrix}
+      0 & 1 & 0 & 0\\
+      0 & -\frac{k^2}{Mr^2Rl} & -\frac{mg}{M} & 0\\
+      0 & 0 & 0 & 1\\
+      0 & \frac{k^2}{Mr^2Rl} & \left(\frac{M+m}{ml}\right)g & 0\\
+    \end{bmatrix}}_A\vbf +\underbrace{
+    \begin{bmatrix}
+      0 \\ \frac{k}{MRr} \\ 0 \\ -\frac{k}{MRrl}
+    \end{bmatrix}}_Bu\\
+  \ybf &= I_4\vbf.
+  \end{split}
+\end{equation*}
+
+
+    % \begin{bmatrix}
+    %   \xdot \\ \xddot \\ \thetadot \\ \thetaddot
+    % \end{bmatrix}
+
 
 \item Repeat part (a) for a veavier weighting: $q_1^2 = 10^4$ on the
   cart displacement.
