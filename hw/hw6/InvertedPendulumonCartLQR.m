@@ -41,16 +41,18 @@ B = B_.*B_r;
 
 Rmat=1/r^2;
 
+try 
 [K,S,E]=lqr(A,B,Q,Rmat);
-
+catch ME
+keyboard
+end
 options = odeset('RelTol',1e-4,'AbsTol',[1e-4 1e-4 1e-4 1e-4]);
-[T,X] = ode45(@(t,x) sys_dy(t,x,A,B,Q,Rmat),[0 5],x0',options);
+[T,X] = ode45(@(t,x) sys_dy(t,x,A,B,K),[0 5],x0',options);
 
 end
 
-function dx=sys_dy(t,x,A,B,Q,R)
+function dx=sys_dy(t,x,A,B,K)
 
-[K,S,E]=lqr(A,B,Q,R);
 u=-K*x;
 dx=A*x+B*u;
 

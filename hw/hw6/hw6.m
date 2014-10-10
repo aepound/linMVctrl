@@ -128,7 +128,7 @@ position.
 param
 close all 
 N=10;
-r = sqrt(linspace(0.1,100,N));
+r = sqrt(linspace(0.0001,50,N));
 [T,X,K,E]=InvertedPendulumonCartLQR(r(1),P);
 for i=1:N
     [T,X,K,E]=InvertedPendulumonCartLQR(r(i));
