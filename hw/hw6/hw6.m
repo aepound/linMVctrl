@@ -115,51 +115,130 @@ unreasonable. Hence  $q^2_1 =\frac{1}{(0.1)^2} =100$.
   Inverted pendulum on cart \matlab example covered in the class
   (follow ``IPonCartLqrPlots.m'' (main executable file) and
   ``InvertedPendulumonCartLQR.m'' in ``Optimal Control.zip''.
-\item[]
+\end{enumerate}
+
 To avoid confusion, we will let our state vector be denoted 
-$\xbf = \left[\begin{smallmatrix} y & \ydot & \theta &
+$\xbf = \left[\begin{smallmatrix} y &  \theta & \ydot &
     \thetadot \end{smallmatrix}\right]^T$.  Thus, $y$ is our
 position. 
 
+\subsubsection{The LQR Controller}
+The code to model the inverted pendulum on a cart along with the LQR
+controller is given in the file \emph{InvertedPendulumonCartLQR.m}  The
+code is listed below.
 
+{\singlespacing
+\lstinputlisting{InvertedPendulumonCartLQR.m}
+}
+
+\subsubsection{The Driver}
+The code below is the driver to run LQR controller for the inverted
+pendulum on a cart.
+
+{\singlespacing
 \begin{lstlisting}
 %}  
-
+%%
 param
 close all 
 N=10;
-r = sqrt(linspace(0.0001,50,N));
+cols = varycolor(N);
+r = sqrt(linspace(0.01,50,N));
 [T,X,K,E]=InvertedPendulumonCartLQR(r(1),P);
 for i=1:N
     [T,X,K,E]=InvertedPendulumonCartLQR(r(i));
     u=-K*X';
+    
+    % Plotting it all.
+    % Plot the poles....
     figure (1)
-    plot(E,'o')
-    title('Poles vs c')
-    xlabel('real')
-    ylabel('Img')
-    grid on
+    plot(E,'*','color',cols(i,:),'linewidth',2)
     hold on
+    
+    % Plot \theta
     figure (2)
-    plot (T,X(:,1))
-    title('theta')
-    grid on
+    plot (T,X(:,1),'color',cols(i,:),'linewidth',2)
     hold on
+    
+    % Plot \thetadot
     figure (3)
-    plot(T,X(:,2))
-    title ('\dot\theta')
-    grid on
+    plot(T,X(:,2),'color',cols(i,:),'linewidth',2)
     hold on
+    
+    % Plot u
     figure(4) 
-    plot (T,u)
-    title('control input')
-    grid on
+    plot (T,u,'color',cols(i,:),'linewidth',2)
     hold on
 end
-
+for iter = 1:4
+    figure(iter);
+    legend(mat2cell([repmat('r^2 = ',N,1) num2str((r.^2)','%02.2f')],ones(N,1)))
+    switch iter
+        case 1
+            title('Poles vs c','fontsize',14)
+            xlabel('real','fontsize',12)
+            ylabel('Img','fontsize',12)
+            grid on
+            xlim([-1,5])
+            legend(mat2cell([repmat('r^2 = ',N,1) num2str((r.^2)','%02.2f')],ones(N,1)),'location','southwest')
+        case 2
+            title('theta','fontsize',14)
+            grid on
+            xlim([0,2.5])
+        case 3
+            title ('\dot\theta','fontsize',14)
+            grid on
+            xlim([0,2.5])
+        case 4
+            title('control input','fontsize',14)
+            grid on
+            xlim([0,2.5])
+    end
+end
+%%
 %{
-\end{lstlisting}
+\end{lstlisting}} % End singlespacing
 
+
+\begin{matlabc}
+%}
+print(1,'-depsc2','poles.eps');
+print(2,'-depsc2','theta.eps');
+print(3,'-depsc2','dot_theta.eps');
+print(4,'-depsc2','control.eps');
+system('ps2pdf -dEPSCrop poles.eps');
+system('ps2pdf -dEPSCrop theta.eps');
+system('ps2pdf -dEPSCrop dot_theta.eps');
+system('ps2pdf -dEPSCrop control.eps');
+%{
+\end{matlabc}
+
+The plots can be seen in Figures \ref{fig:1}.
+\begin{figure}
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\linewidth]{poles}
+        \caption{Plot of the poles}
+    \end{subfigure}
+\hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\linewidth]{theta}
+        \caption{Plot of $\theta$.}
+    \end{subfigure}
+\\
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\linewidth]{dot_theta}
+        \caption{Plot of $\thetadot$.}
+    \end{subfigure}
+\hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\linewidth]{control}
+        \caption{Plot of the control input.}
+    \end{subfigure}
+\caption{Plots of the outputs with $q_1^2 = \frac{1}{(0.1)^2}$, and $q_3^2=
+\frac{1}{(0.017)^2}$.}
+\label{fig:1}
+\end{figure}
 
 
 % We can put the above equations into Linear form by
@@ -185,10 +264,115 @@ end
 %   \xdot \\ \xddot \\ \thetadot \\ \thetaddot
 % \end{bmatrix}
 
-
-\item Repeat part (a) for a veavier weighting: $q_1^2 = 10^4$ on the
+\begin{enumerate}[label=(\alph*),start=2]
+\item Repeat part (a) for a heavier weighting: $q_1^2 = 10^4$ on the
   cart displacement.
-\item[]
+\end{enumerate}
+
+\begin{matlabc}
+%}
+close all
+P.Qmat(1,1) = 10^4;
+[T,X,K,E]=InvertedPendulumonCartLQR(r(1),P);
+for i=1:N
+    [T,X,K,E]=InvertedPendulumonCartLQR(r(i));
+    u=-K*X';
+    
+    % Plotting it all.
+    % Plot the poles....
+    figure (1)
+    plot(E,'*','color',cols(i,:),'linewidth',2)
+    hold on
+    
+    % Plot \theta
+    figure (2)
+    plot (T,X(:,1),'color',cols(i,:),'linewidth',2)
+    hold on
+    
+    % Plot \thetadot
+    figure (3)
+    plot(T,X(:,2),'color',cols(i,:),'linewidth',2)
+    hold on
+    
+    % Plot u
+    figure(4) 
+    plot (T,u,'color',cols(i,:),'linewidth',2)
+    hold on
+end
+for iter = 1:4
+    figure(iter);
+    legend(mat2cell([repmat('r^2 = ',N,1) num2str((r.^2)','%02.2f')],ones(N,1)))
+    switch iter
+        case 1
+            title('Poles vs c 2','fontsize',14)
+            xlabel('real','fontsize',12)
+            ylabel('Img','fontsize',12)
+            grid on
+            xlim([-1,5])
+            legend(mat2cell([repmat('r^2 = ',N,1) num2str((r.^2)','%02.2f')],ones(N,1)),'location','southwest')
+        case 2
+            title('theta 2','fontsize',14)
+            grid on
+            xlim([0,2.5])
+        case 3
+            title ('\dot\theta 2','fontsize',14)
+            grid on
+            xlim([0,2.5])
+        case 4
+            title('control input 2','fontsize',14)
+            grid on
+            xlim([0,2.5])
+    end
+end
+%{
+\end{matlabc}
+
+
+\begin{matlabc}
+%}
+print(1,'-depsc2','poles2.eps');
+print(2,'-depsc2','theta2.eps');
+print(3,'-depsc2','dot_theta2.eps');
+print(4,'-depsc2','control2.eps');
+system('ps2pdf -dEPSCrop poles2.eps');
+system('ps2pdf -dEPSCrop theta2.eps');
+system('ps2pdf -dEPSCrop dot_theta2.eps');
+system('ps2pdf -dEPSCrop control2.eps');
+%{
+\end{matlabc}
+
+The new plots can be seen in Figures \ref{fig:2}.  The plots for the
+control input are pretty similar, but a little bit more ringing can be seen
+in the plot of $\thetadot$.  Also the convergence of $\theta$ happens
+quicker.
+
+\begin{figure}
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\linewidth]{poles2}
+        \caption{Plot of the poles}
+    \end{subfigure}
+\hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\linewidth]{theta2}
+        \caption{Plot of $\theta$.}
+    \end{subfigure}
+\\
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\linewidth]{dot_theta2}
+        \caption{Plot of $\thetadot$.}
+    \end{subfigure}
+\hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\linewidth]{control2}
+        \caption{Plot of the control input.}
+    \end{subfigure}
+\caption{Plots of the outputs with $q_1^2 = (10)^4$, and $q_3^2=
+\frac{1}{(0.017)^2}$.}
+\label{fig:2}
+\end{figure}
+
+\begin{enumerate}[label=(\alph*),start=3]
 \item (Optional: Bonus 20 points) Change the inverted pendulum on cart
   simulator for this problem and generate simulation videos for both
   the cases. Download ``Optimal Control.zip'' and use ``param.m''
