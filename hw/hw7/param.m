@@ -83,10 +83,15 @@ P2.periwidth = 1/64;
 
 % pillar dimentions
 %% State-Space
-A=?
-B=?
-b=?
-%% Trajectory Parameters % change these parameters based on the assignment
+A=[zeros(3)   eye(3)     zeros(3,1);
+   zeros(3)   zeros(3)   zeros(3,1);
+   zeros(1,3) zeros(1,3) 0];
+B=[zeros(3,4);
+   eye(3,4);
+   0 0 0 1];
+b=[0 0 0 0 0 1 0]';
+%% Trajectory Parameters % change these parameters based on the
+%% assignment 
 P.a=1.5;
 P.b=0.75;
 P.c=0.5;
@@ -98,6 +103,8 @@ P.w3=P.w1;
 P.n=-0.75;
 
 %% Setup LQR
-Q=?
-R=?
-P.K=? % Use LQR to compute Optimal gain matrix. This matrix will be used to compute u in the controller
+Q=ones(7);
+R=ones(7);
+P.K=lqr(A,B,Q,R); % Use LQR to compute Optimal gain matrix. This
+                  % matrix will be used to compute u in the
+                  % controller 

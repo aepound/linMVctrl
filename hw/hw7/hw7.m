@@ -1,6 +1,6 @@
 %{
 \documentclass{article}
-\input{commonheader}
+\input{../hw6/commonheader}
 \usepackage{comment}
 
 \usepackage{enumitem}
@@ -92,7 +92,7 @@ p^r_d(t)
 \end{equation}
 where $\omega_1 =\frac{2\pi}{T}$
 for the following four scenarios
-\begin{itemize}
+\begin{enumerate}
 \item  $a = 1.5$, $b = 0.75$, $c = 0$, $n = -0.75$, $\omega_2 =
 \omega_1/2$, $\omega_3 = \omega_1$ and $T = 5s$.
 \item $a = 1.5$, $b = 0.75$, $c = 0.5$, $n = -0.75$, $\omega_2 =
@@ -101,8 +101,8 @@ for the following four scenarios
 \omega_1$, $\omega_3 = \omega_1$ and $T = 10s$.
 \item  Generate an unique trajectory (what ever you can cook up) and
 track it using the LQR controller.
-\end{itemize}
-
+\end{enumerate}
+{\singlespacing
 \begin{lstlisting}
 %}  
 
@@ -114,7 +114,7 @@ r = sqrt(linspace(0.0001,50,N));
 
 %{
 \end{lstlisting}
-
+}
 
 
 \end{document}

@@ -35,13 +35,16 @@ R_psi=[...
 
 %% Just a reminder the mass of quadrotor is P.m
 %% ALso the Gain Matrix P.K is computed in the param file using LQR so use it
-T=? % thrust
-
+T=P.m*norm(ur); % thrust
+up = ur(1:3);
+upsi = ur(4);
+z = R_psi*up*P.m/(-T);
 %% define a vector
+thetadot = q;
 
-phi_c=?
-theta_c=?
-r_d=?
+phi_c=asin(-z(2));
+theta_c=atan2(z(1),z(3));
+r_d=upsi*cos(theta)*cos(phi) - thetadot*sin(phi);
 
 
 
