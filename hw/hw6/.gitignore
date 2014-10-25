@@ -1,0 +1,7 @@
+computer.tex
+*.eps
+*.pdf
+date.tex
+*.aux
+*.log
+vers.tex
