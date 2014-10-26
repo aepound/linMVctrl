@@ -1,12 +1,31 @@
+function [P, P2, A, B, b] = param(QR,tag,traj)
 %==========================================================================
 %This is the quadrotor parameters file given to ECE 6320 Students
 %You need to Run this before running QuadCOntrol_Waypoint.slx
 %
-%09/25/2014: Last modified by Rajikant Sharma
+%10/25/2014:  modified by Andrew Pound
+%09/25/2014:  modified by Rajikant Sharma
 %==========================================================================
-close all;
-clear all;
-clc;
+%
+% In: 
+%   QR: the information to setup the Q and R matrices.
+%   tag: the manner of setting up the Q/R or K matrix
+%        tag == 1: Q = diag(QR(1:7); R = diag(QR(8:11);
+%        tag == 2: K = QR;
+%   tag2: Which trajectory we are running...
+%        
+
+%close all;
+%clear all;
+%clc;
+
+if nargin < 2
+    tag = 1;
+    traj = 2;
+elseif nargin < 3
+    traj = 2;
+end
+
 %% Sampling time
 P.Ts=1/100;  
 %% Quadrotr Inertial Parameters (What are they for A R Drone ?)
@@ -38,12 +57,12 @@ a_phi3=1/P.Jx;
 phi_max=30*pi/180;
 tau_phi_max=2;
 
- wn_roll = sqrt(a_phi3*tau_phi_max*sqrt(1-zeta_roll^2)/phi_max);
+wn_roll = sqrt(a_phi3*tau_phi_max*sqrt(1-zeta_roll^2)/phi_max);
     
-    % set control gains based on zeta and wn
-    P.roll_kp = wn_roll^2/a_phi3;
-    P.roll_kd = 1.1*(2*zeta_roll*wn_roll )/a_phi3;
-    P.roll_ki = 0.1;
+% set control gains based on zeta and wn
+P.roll_kp = wn_roll^2/a_phi3;
+P.roll_kd = 1.1*(2*zeta_roll*wn_roll )/a_phi3;
+P.roll_ki = 0.1;
 %% Pitch
 
 zeta_pitch = 0.707;
@@ -53,10 +72,10 @@ tau_theta_max=2;
 
  wn_pitch = sqrt(a_phi3*tau_theta_max*sqrt(1-zeta_pitch^2)/theta_max);
     
-    % set control gains based on zeta and wn
-    P.theta_kp = wn_pitch^2/a_phi3;
-    P.theta_kd = 1.1*(2*zeta_pitch*wn_pitch )/a_phi3;
-    P.theta_ki = 0.1;
+% set control gains based on zeta and wn
+P.theta_kp = wn_pitch^2/a_phi3;
+P.theta_kd = 1.1*(2*zeta_pitch*wn_pitch )/a_phi3;
+P.theta_ki = 0.1;
 
 %% drawing parameters
 % distances are in feet.
@@ -92,19 +111,67 @@ B=[zeros(3,4);
 b=[0 0 0 0 0 1 0]';
 %% Trajectory Parameters % change these parameters based on the
 %% assignment 
-P.a=1.5;
-P.b=0.75;
-P.c=0.5;
-
-P.T=10;%T=6; %T=10;T=20; good
-P.w1=2*pi/P.T;
-P.w2=P.w1/2;
-P.w3=P.w1;
-P.n=-0.75;
+switch traj
+  case 2
+    P.a=1.5;
+    P.b=0.75;
+    P.c=0.5;
+    P.n=-0.75;
+    
+    P.T=10;%T=6; %T=10;T=20; good
+    
+    P.w1=2*pi/P.T;
+    P.w2=P.w1/2;
+    P.w3=P.w1;
+  case 3
+    P.a=0.75;
+    P.b=0.75;
+    P.c=0;
+    P.n=-0.75;
+    
+    P.T=10;%T=6; %T=10;T=20; good
+    
+    P.w1=2*pi/P.T;
+    P.w2=P.w1;
+    P.w3=P.w1;
+  case 4
+    P.a=0.75;
+    P.b=1.75;
+    P.c=0.5;
+    P.n=-0.75;
+    
+    P.T=10;%T=6; %T=10;T=20; good
+    
+    P.w1=2*pi/P.T;
+    P.w2=0;
+    P.w3=2*P.w1;
+  otherwise
+    P.a=1.5;
+    P.b=0.75;
+    P.c=0;
+    P.n=-0.75;
+    
+    P.T=5;%T=6; %T=10;T=20; good
+    
+    P.w1=2*pi/P.T;
+    P.w2=P.w1/2;
+    P.w3=P.w1;
+end
 
 %% Setup LQR
-Q=ones(7);
-R=ones(7);
-P.K=lqr(A,B,Q,R); % Use LQR to compute Optimal gain matrix. This
-                  % matrix will be used to compute u in the
-                  % controller 
+%Q=diag(1./(ones(7,1)*10).^2);%([.5 .5 1 .1 .1 1 .25].^2));
+%R=diag(1./(ones(4,1)*10).^2);
+
+
+% Use LQR to compute Optimal gain matrix. This
+% matrix will be used to compute u in the
+% controller 
+
+switch tag
+  case 1
+    P.Q = diag(QR(1:7));
+    P.R = diag(QR(8:11));
+    P.K = lqr(A,B,P.Q,P.R);
+  case 2
+    P.K = QR;
+end

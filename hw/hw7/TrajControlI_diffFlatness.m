@@ -5,6 +5,10 @@ function in=TrajControlI_diffFlatness(uu,P)
 %
 %10/09/2014: Last modified by Rajikant Sharma
 %==========================================================================
+persistent printed
+if isempty(printed)
+    printed = false;
+end
 Xtrue=uu(1:12);
 pn=Xtrue(1);% position north in inerital frame
 pe=Xtrue(2);% position east in inerital frame
@@ -37,6 +41,12 @@ R_psi=[...
 %% ALso the Gain Matrix P.K is computed in the param file using LQR so use it
 xtilde = x - xr;
 utilde = -P.K*xtilde;
+if ~printed
+    % This is to compare the gain matrix inside the simulation with the one
+    % ouside ...
+    disp(P.K)
+    printed = true;
+end
 
 u = ur+utilde;
 up = u(1:3);

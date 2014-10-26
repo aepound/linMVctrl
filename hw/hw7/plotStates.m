@@ -1,5 +1,8 @@
-function plotStates
-close all
+function [out1, out2] = plotStates(errflag)
+if ~nargin
+    errflag = 1;
+end
+%close all
 load quad_states.mat
 load traj.mat
 load control_com.mat
@@ -92,4 +95,13 @@ grid on
 %% compute Root Mean Square Error
 n=size(T,1);
 posRmsError=sqrt(((pn-pnr)'*(pn-pnr)+(pe-per)'*(pe-per)+(pd-pdr)'*(pd-pdr))/n)
-MaxPositionError=max(((pn-pnr).*(pn-pnr)+(pe-per).*(pe-per)+(pd-pdr).*(pd-pdr)).^(0.5))
+MaxPositionError=max(((pn-pnr).*(pn-pnr)+(pe-per).*(pe-per)+(pd-pdr).*(pd- ...
+                                                  pdr)).^(0.5))
+if errflag 
+    out1 = MaxPositionError;
+    out2 = posRmsError;
+else
+    out1 = posRmsError;
+    out2 = MaxPositionError;
+end
+end

@@ -5,7 +5,7 @@
 %09/25/2014: Last modified by Rajikant Sharma
 %===============================================================================
 
-function drawQuad(uu,P)
+function drawQuad(uu,P)%,nofigs)
 
     % process inputs to function
     pn       = uu(1);       % inertial North position     
@@ -37,9 +37,16 @@ function drawQuad(uu,P)
     
     % first time function is called, initialize plot and persistent vars
     if t<=0.1,
-        figure(1), clf
+        %        if ~nofigs
+        %    reset(1);
+            figure(1), clf
+        %else
+        %    figure(1);
+        %    set(1,'Visible','off');
+        %end
+            
         
-   x=[pn;pe;pd];
+        x=[pn;pe;pd];
         %draws quadrotor at initial position
         fig_quadrotor = drawquadrotor(pn,pe,pd,phi,theta,psi, P, [], 'normal');
 

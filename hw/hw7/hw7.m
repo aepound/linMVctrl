@@ -102,19 +102,363 @@ for the following four scenarios
 \item  Generate an unique trajectory (what ever you can cook up) and
 track it using the LQR controller.
 \end{enumerate}
-{\singlespacing
-\begin{lstlisting}
-%}  
 
-param
-close all 
-N=10;
-r = sqrt(linspace(0.0001,50,N));
-[T,X,K,E]=InvertedPendulumonCartLQR(r(1),P);
+\subsection{My code modifications}
+So in order to test the different trajectories, I modified my code somewhat to
+make it easier to work with. I turned the \emph{param.m} file into a function
+instead of a script.  It now has three inputs: \emph{QR, tag, traj}.  \emph{QR}
+is the information needed to compute the LQR gain matrix $K$. \emph{tag} is a
+flag to specify between two different methods of inputting the \emph{QR}
+information. And finally, the \emph{traj} specifies the trajectory to use for the
+simulation.
 
-%{
-\end{lstlisting}
+The relevant portions of the param file can be seen in the listing below.
+
+{\singlespacing\footnotesize
+\lstinputlisting[linerange={1-1,9-15,104-166},stepnumber=2,
+caption=Relevant parts of \emph{param.m}]{param.m}
 }
+
+In order to get the simulation to work in the first place, I needed to add in the
+following to the \emph{TrajControll\_diffFlatness.m} file.  My additions were
+
+{\singlespacing\footnotesize
+\lstinputlisting[firstline=40,lastline=61,stepnumber=2,
+caption=Relevant parts of
+\emph{TrajControlI\_diffFlatness.m}]{TrajControlI_diffFlatness.m} 
+}
+
+\subsection{Finding the LQR matrices}
+Ok, I think that pretty much summarizes the code to get the thing working
+correctly.  Now, I'll detail the methods I wrote to find the best $Q$ and $R$
+matrices that I could.  I considered using both a particle filter and/or a
+simulated annealing technique, to evolve the matrices in the direction that
+minimized the errors, but I didn't want to take the time to debug them.  So I
+went with something much more simple and straightforward, and more
+brute-force-ish.   I ran each of the trajectories for a certain number of times,
+while putting in different values for the $Q$ and $R$ matrices.  
+
+I did make use of Bryson's rule, so that I wouldn't have to worry about
+constraining the matrices to be positive definite. (Though I did give it a try
+once or twice, but it just became difficult to continue.) I first experimented
+with the magnitude of the two matrices and found that if both $Q$ and $R$ all had
+the same entries and were scaled identities, then no matter the scaling on the
+identities, the gain matrix was essentially the same.  So I started experimenting
+with changing the relevant magnitudes of $Q$ and $R$, sticking with both being
+scaled identities.  I got slightly better results, but not that much better.
+Then I tried to use uniformly random noise coefficients for both $Q$ and $R$.
+That once again reduced the error a bit (sometimes: it also sometimes produced
+horrible results that wouldn't even converge to the trajectory wanted).
+
+Then I was able to run an experiment that really reduced the error.  I changed it
+so that of the 7 elements on the diagonal of $Q$, I had different orders of
+magnitudes.  I took this $Q$ vector, and permuted it in a number of different
+ways and ran the simulation on these and some permutations produced really good
+error.  So I then worked to build the apparatus to test out and find a number of
+these ``good'' $Q$ matrices.
+
+What I coded up is shown in the listing below.
+{\singlespacing\footnotesize
+\lstinputlisting[stepnumber=2,%
+caption=Relevant parts of
+\emph{scriptingloop.m}]{scriptingloop.m} 
+}
+
+\subsection{Best results}
+\subsubsection{Trajectory 1}
+\begin{matlabc}
+%}
+%% Trajectory 1
+N = 20;
+traj = 1;
+scriptingloop
+
+print(2,'-depsc2','1path.eps');
+print(3,'-depsc2','1angles.eps');
+print(4,'-depsc2','1errors.eps');
+print(5,'-depsc2','1position.eps');
+system('ps2pdf -dEPSCrop 1path.eps');
+system('ps2pdf -dEPSCrop 1angles.eps');
+system('ps2pdf -dEPSCrop 1errors.eps');
+system('ps2pdf -dEPSCrop 1position.eps');
+%%
+%{
+\end{matlabc}
+
+The $Q$ and $R$ matrices that were found to be the best were 
+\begin{align*}
+  Q &=
+  \begin{bmatrix}
+    \input{1Q.tex}
+  \end{bmatrix}
+  & 
+  R &= 
+  \begin{bmatrix}
+    \input{1R.tex}
+  \end{bmatrix}
+\end{align*}
+The best error obtained for this trajectory is shown in the following table.
+\begin{table}[h]
+  \centering
+  \begin{tabular}{cc}
+    \toprule
+    Max Position Error & Position RMS Error \\
+    \midrule
+    \input{1errTable}
+    \bottomrule
+  \end{tabular}
+  \caption{Trajectory 1 error results}
+  \label{tab:1}
+\end{table}
+The plots can be seen in Figures \ref{fig:1}.
+\begin{figure}
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\linewidth]{1path}
+        \caption{Plot of the path/trajectory}
+    \end{subfigure}
+\hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\linewidth]{1angles}
+        \caption{Plot of angle states}
+    \end{subfigure}
+\\
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\linewidth]{1errors}
+        \caption{Plot of errors in position}
+    \end{subfigure}
+\hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\linewidth]{1position}
+        \caption{Plot of the position states}
+    \end{subfigure}
+\caption{Plots of the outputs for the first trajectory}
+\label{fig:1}
+\end{figure}
+
+
+
+
+\subsubsection{Trajectory 2}
+\begin{matlabc}
+%}
+%% Trajectory 2
+traj = 2;
+scriptingloop
+
+print(2,'-depsc2','2path.eps');
+print(3,'-depsc2','2angles.eps');
+print(4,'-depsc2','2errors.eps');
+print(5,'-depsc2','2position.eps');
+system('ps2pdf -dEPSCrop 2path.eps');
+system('ps2pdf -dEPSCrop 2angles.eps');
+system('ps2pdf -dEPSCrop 2errors.eps');
+system('ps2pdf -dEPSCrop 2position.eps');
+%%
+%{
+\end{matlabc}
+
+The $Q$ and $R$ matrices that were found to be the best were 
+\begin{align*}
+  Q &=
+  \begin{bmatrix}
+    \input{2Q.tex}
+  \end{bmatrix}
+  & 
+  R &= 
+  \begin{bmatrix}
+    \input{2R.tex}
+  \end{bmatrix}
+\end{align*}
+The best error obtained for this trajectory is shown in the following table.
+\begin{table}[h]
+  \centering
+  \begin{tabular}{cc}
+    \toprule
+    Max Position Error & Position RMS Error \\
+    \midrule
+    \input{2errTable}
+    \bottomrule
+  \end{tabular}
+  \caption{Trajectory 2 error results}
+  \label{tab:2}
+\end{table}
+The plots can be seen in Figures \ref{fig:2}.
+\begin{figure}
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\linewidth]{2path}
+        \caption{Plot of the path/trajectory}
+    \end{subfigure}
+\hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\linewidth]{2angles}
+        \caption{Plot of angle states}
+    \end{subfigure}
+\\
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\linewidth]{2errors}
+        \caption{Plot of errors in position}
+    \end{subfigure}
+\hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\linewidth]{2position}
+        \caption{Plot of the position states}
+    \end{subfigure}
+\caption{Plots of the outputs for the second trajectory}
+\label{fig:2}
+\end{figure}
+
+
+\subsubsection{Trajectory 3}
+\begin{matlabc}
+%}
+%% Trajectory 3
+traj = 3;
+scriptingloop
+
+print(2,'-depsc2','3path.eps');
+print(3,'-depsc2','3angles.eps');
+print(4,'-depsc2','3errors.eps');
+print(5,'-depsc2','3position.eps');
+system('ps2pdf -dEPSCrop 3path.eps');
+system('ps2pdf -dEPSCrop 3angles.eps');
+system('ps2pdf -dEPSCrop 3errors.eps');
+system('ps2pdf -dEPSCrop 3position.eps');
+%%
+%{
+\end{matlabc}
+
+The $Q$ and $R$ matrices that were found to be the best were 
+\begin{align*}
+  Q &=
+  \begin{bmatrix}
+    \input{3Q.tex}
+  \end{bmatrix}
+  & 
+  R &= 
+  \begin{bmatrix}
+    \input{3R.tex}
+  \end{bmatrix}
+\end{align*}
+The best error obtained for this trajectory is shown in the following table.
+\begin{table}[h]
+  \centering
+  \begin{tabular}{cc}
+    \toprule
+    Max Position Error & Position RMS Error \\
+    \midrule
+    \input{3errTable}
+    \bottomrule
+  \end{tabular}
+  \caption{Trajectory 3 error results}
+  \label{tab:3}
+\end{table}
+The plots can be seen in Figures \ref{fig:1}.
+\begin{figure}
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\linewidth]{3path}
+        \caption{Plot of the path/trajectory}
+    \end{subfigure}
+\hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\linewidth]{3angles}
+        \caption{Plot of angle states}
+    \end{subfigure}
+\\
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\linewidth]{3errors}
+        \caption{Plot of errors in position}
+    \end{subfigure}
+\hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\linewidth]{3position}
+        \caption{Plot of the position states}
+    \end{subfigure}
+\caption{Plots of the outputs for the third trajectory}
+\label{fig:3}
+\end{figure}
+
+\subsubsection{Trajectory 4}
+\begin{matlabc}
+%}
+%% Trajectory 4
+traj = 4;
+scriptingloop
+
+print(2,'-depsc2','4path.eps');
+print(3,'-depsc2','4angles.eps');
+print(4,'-depsc2','4errors.eps');
+print(5,'-depsc2','4position.eps');
+system('ps2pdf -dEPSCrop 4path.eps');
+system('ps2pdf -dEPSCrop 4angles.eps');
+system('ps2pdf -dEPSCrop 4errors.eps');
+system('ps2pdf -dEPSCrop 4position.eps');
+
+%% 
+%{
+\end{matlabc}
+
+The $Q$ and $R$ matrices that were found to be the best were 
+\begin{align*}
+  Q &=
+  \begin{bmatrix}
+    \input{4Q.tex}
+  \end{bmatrix}
+  & 
+  R &= 
+  \begin{bmatrix}
+    \input{4R.tex}
+  \end{bmatrix}
+\end{align*}
+The best error obtained for this trajectory is shown in the following table.
+\begin{table}[h]
+  \centering
+  \begin{tabular}{cc}
+    \toprule
+    Max Position Error & Position RMS Error \\
+    \midrule
+    \input{4errTable}
+    \bottomrule
+  \end{tabular}
+  \caption{Trajectory 4 error results}
+  \label{tab:4}
+\end{table}
+The plots can be seen in Figures \ref{fig:4}.
+\begin{figure}
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\linewidth]{4path}
+        \caption{Plot of the path/trajectory}
+    \end{subfigure}
+\hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\linewidth]{4angles}
+        \caption{Plot of angle states}
+    \end{subfigure}
+\\
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\linewidth]{4errors}
+        \caption{Plot of errors in position}
+    \end{subfigure}
+\hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\linewidth]{4position}
+        \caption{Plot of the position states}
+    \end{subfigure}
+\caption{Plots of the outputs for the fourth trajectory}
+\label{fig:4}
+\end{figure}
+
+\begin{matlabc}
+%}
+%% LaTeX the document...
+system('pdflatex hw7.m');
+system('pdflatex hw7.m');
+%% 
+%{
+\end{matlabc}
 
 
 \end{document}
