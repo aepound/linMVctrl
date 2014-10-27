@@ -169,7 +169,7 @@ caption=Relevant parts of
 \begin{matlabc}
 %}
 %% Trajectory 1
-N = 20;
+N = 50;
 traj = 1;
 scriptingloop
 
@@ -456,6 +456,9 @@ The plots can be seen in Figures \ref{fig:4}.
 %% LaTeX the document...
 system('pdflatex hw7.m');
 system('pdflatex hw7.m');
+clear all
+close all
+bdclose('all')
 %% 
 %{
 \end{matlabc}
