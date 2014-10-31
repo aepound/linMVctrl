@@ -258,7 +258,7 @@ The we can stack these to form
     \end{bmatrix}
  + 
  \begin{bmatrix}
-   0 \\ \frac{k}{MRr} \\ 0 \\ \frac{k}{MRrl}
+   0 \\ \frac{k}{MRr} \\ 0 \\ -\frac{k}{MRrl}
  \end{bmatrix}e.
   \end{split}
 \end{equation*}
@@ -288,7 +288,7 @@ A = [ 0 1 0 0;...
       0 0 0 1;
       0 k^2/(M*r^2*R*l) (M+m)/(M*l)*g 0];
 
-B = [ 0; k/(M*R*r); 0; k/(M*R*r*l)];
+B = [ 0; k/(M*R*r); 0; -k/(M*R*r*l)];
 
 Con = contMat(A,B);
 if exist('prob2b1.txt','file')
