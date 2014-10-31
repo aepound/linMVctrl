@@ -137,6 +137,7 @@ The linearized system around the given trajectory is given in Example
 \begin{matlabc}
 %}
 %% Setting up the linearized system.
+disp(['Problem 1...'])
 syms w0 r0 m;
 A = [ 0 1 0 0 0 0 ;...
       3*w0^2 0 0 2*w0*r0 0 0; ...
@@ -187,27 +188,158 @@ disp(rank1)
 
 %{
 \end{lstlisting}}
-The output from the rank command is shown below.
-{\singlespacing
-\IfFileExists{prob1a0.txt}{\lstinputlisting{prob1a0.txt}}
-{\lstinputlisting{prob1a1.txt}}  
-}
-Thus, the system is \emph{not}
+The rank of the controllability matrix is
+\IfFileExists{prob1a0.txt}{\input{prob1a0.txt}}
+{\input{prob1a1.txt}}.  
+Thus, the system is 
+\IfFileExists{prob1a0.txt}{\emph{not}}{}
 controllable.
 
+
 \item Is the system controllable when thruster $u_\phi$ cannot be
-  used?
+  used? % Part b
+\item[]
+{\singlespacing
+\begin{lstlisting}
+%}
+B1b = B;
+B1b(:,3) = 0;
+Con = contMat(A,B1b);
+fname = 'prob1b';
+if exist([fname '1.txt'],'file')
+  delete([fname '1.txt']);
+end
+if exist([fname '0.txt'],'file')
+  delete([fname '0.txt']);
+end
+rank1b = double(rank(Con));
+if rank1b == size(A,1)
+  fid = fopen([fname '1.txt'],'wt');
+else
+  fid = fopen([fname '0.txt'],'wt');
+end
+fprintf(fid,'%d',rank1b);
+fclose(fid);
+disp(rank1b)
+%{
+\end{lstlisting}}
+The rank of the controllability matrix is
+\IfFileExists{prob1b0.txt}{\input{prob1b0.txt}}
+{\input{prob1b1.txt}}.  
+Thus, the system is 
+\IfFileExists{prob1b0.txt}{\emph{not}}{}
+controllable.
+
 \item Is the system controllable when thruster $u_\theta$ cannot be
-  used? 
-\item Is the system controllable when thruster $u_r$ cannot be used? 
+  used? % Part c 
+\item[]
+{\singlespacing
+\begin{lstlisting}
+%}
+B1c = B;
+B1c(:,2) = 0;
+Con = contMat(A,B1c);
+fname = 'prob1c';
+if exist([fname '1.txt'],'file')
+  delete([fname '1.txt']);
+end
+if exist([fname '0.txt'],'file')
+  delete([fname '0.txt']);
+end
+rank1c = double(rank(Con));
+if rank1c == size(A,1)
+  fid = fopen([fname '1.txt'],'wt');
+else
+  fid = fopen([fname '0.txt'],'wt');
+end
+fprintf(fid,'%d',rank1c);
+fclose(fid);
+disp(rank1c)
+%{
+\end{lstlisting}}
+The rank of the controllability matrix is
+\IfFileExists{prob1c0.txt}{\input{prob1c0.txt}}
+{\input{prob1c1.txt}}. 
+Thus, the system is 
+\IfFileExists{prob1c0.txt}{\emph{not}}{}
+controllable.
+
+\item Is the system controllable when thruster $u_r$ cannot be used?
+% Part d 
+\item[]
+{\singlespacing
+\begin{lstlisting}
+%}
+B1d = B;
+B1d(:,1) = 0;
+Con = contMat(A,B1d);
+fname = 'prob1d';
+if exist([fname '1.txt'],'file')
+  delete([fname '1.txt']);
+end
+if exist([fname '0.txt'],'file')
+  delete([fname '0.txt']);
+end
+rank1d = double(rank(Con));
+if rank1d == size(A,1)
+  fid = fopen([fname '1.txt'],'wt');
+else
+  fid = fopen([fname '0.txt'],'wt');
+end
+fprintf(fid,'%d',rank1d);
+fclose(fid);
+disp(rank1d)
+
+%{
+\end{lstlisting}}
+The rank of the controllability matrix is
+\IfFileExists{prob1d0.txt}{\input{prob1d0.txt}}
+{\input{prob1d1.txt}}.
+Thus, the system is 
+\IfFileExists{prob1d0.txt}{\emph{not}}{}
+controllable.
+
 \item Is the system controllable when thruster $u_\phi$ and $u_\theta$
   cannot be used?
+\item[]
+{\singlespacing
+\begin{lstlisting}
+%}
+B1e = B;
+B1e(:,2:3) = 0;
+Con = contMat(A,B1e);
+fname = 'prob1e';
+if exist([fname '1.txt'],'file')
+  delete([fname '1.txt']);
+end
+if exist([fname '0.txt'],'file')
+  delete([fname '0.txt']);
+end
+rank1e = double(rank(Con));
+if rank1e == size(A,1)
+  fid = fopen([fname '1.txt'],'wt');
+else
+  fid = fopen([fname '0.txt'],'wt');
+end
+fprintf(fid,'%d',rank1e);
+fclose(fid);
+disp(rank1e)
+
+%{
+\end{lstlisting}}
+The rank of the controllability matrix is
+\IfFileExists{prob1e0.txt}{\input{prob1e0.txt}}
+{\input{prob1e1.txt}}. 
+Thus, the system is 
+\IfFileExists{prob1e0.txt}{\emph{not}}{}
+controllable.
+
 \end{enumerate}
 
 
 
 
-\section{Problem 2}\label{sec:prob1}
+\section{Problem 2}\label{sec:prob2}
 
 The cart carrying the inverted pendulum is driven by an electric motor.
 Assume that the motor drives one pair of the wheels of the cart, so that
@@ -219,7 +351,7 @@ differential equations of this system are written as
     &= \frac{k}{MRr}e \\
     \thetaddot - \left(\frac{M+m}{Ml}\right)g\theta -
     \frac{k^2}{Mr^2Rl}\xdot 
-    &= \frac{k}{MRrl}e
+    &= -\frac{k}{MRrl}e
   \end{split}
 \end{equation*}
 where $k$ is the motor torque constant, $R$ is the motor resistance, 
@@ -236,7 +368,7 @@ state vector and input be defined $\xbf = [x, \dot{x},
     + \frac{k}{MRr}e \\
     \thetaddot &= \left(\frac{M+m}{Ml}\right)g\theta +
     \frac{k^2}{Mr^2Rl}\xdot 
-    + \frac{k}{MRrl}e.
+    - \frac{k}{MRrl}e.
   \end{split}
 \end{equation*}
 The we can stack these to form
@@ -271,6 +403,7 @@ The we can stack these to form
 \begin{lstlisting}
 %}
 %% Problem 2.
+disp(['Problem 2...'])
 m = 0.1; 
 M = 1;
 l = 1;
@@ -298,7 +431,7 @@ if exist('prob2b0.txt','file')
   delete('prob2b0.txt');
 end
 rank2 = double(rank(Con));
-if rank2 == 6
+if rank2 == size(A,1)
   fid = fopen('prob2b1.txt','wt');
 else
   fid = fopen('prob2b0.txt','wt');
@@ -312,13 +445,14 @@ disp(rank2)
 The rank of the controllability matrix is 
 \IfFileExists{./prob2b1.txt}{\input{prob2b1.txt}}{\input{prob2b0.txt}}.
 Thus the system is \IfFileExists{./prob2b0.txt}{\emph{not}}{}
-controlable. 
+controllable. 
  \end{enumerate}
 The following numerical data can be used if would rather use numbers
 then letters:
 $m = 0.1kg$, $M = 1.0kg$, $l = 1.0m$, $g = 9.8ms^{-2}$, $k = 1V$, $R =
 100\Omega$,  
 and $r = 0.02m$.
+
 
 
 \section{Problem 3}
@@ -353,14 +487,17 @@ u_1 \\ u_2 \\ u_3
 Determine whether or not the evaporator is controllable from each of
 the following combinations of inputs:
 
+
+
 \subsection{My Answer}
-First, let's put them into \matlab.
+First, let's put them into \matlab{}.
+
 
 {\singlespacing
 \begin{lstlisting}
 %}
 %% Problem 3
-
+disp(['Problem 3...'])
 A = [...
      0 -.00156 -.0711 0 0;...
      0 -.1419  .0711  0 0;...
@@ -377,19 +514,153 @@ B = [...
 
 contMat = @(A,B) [B A*B A^2*B A^3*B A^4*B];
 %{
-\end{lstslisting}}
-
+\end{lstlisting}}
 
 \begin{enumerate}[label={(\alph*)}]
 \item $u_1$ only;
-\item 
-$u_1$ and $u_2$ ;
-\item 
-$u_1$ and $u_3$ ;
-\item 
-$u_2$ and $u_3$ ;
+\item[]
+{\singlespacing
+\begin{lstlisting}
+%}
+%% Problem 3a
+B3a = B;
+B3a(:,2:3) = 0;
+Con = contMat(A,B3a);
+if exist('prob3a1.txt','file')
+  delete('prob3a1.txt');
+end
+if exist('prob3a0.txt','file')
+  delete('prob3a0.txt');
+end
+rank3a = double(rank(Con));
+if rank3a == size(A,1)
+  fid = fopen('prob3a1.txt','wt');
+else
+  fid = fopen('prob3a0.txt','wt');
+end
+fprintf(fid,'%d',rank3a);
+fclose(fid);
+disp(rank3a)
+%{
+\end{lstlisting}}
+
+The rank of the controllability matrix is 
+\IfFileExists{./prob3a1.txt}{\input{prob3a1.txt}}{\input{prob3a0.txt}}.
+Thus the system is \IfFileExists{./prob3a0.txt}{\emph{not}}{}
+controllable. 
+
+
+\item $u_1$ and $u_2$ 
+\item[]
+{\singlespacing
+\begin{lstlisting}
+%}
+%% Problem 3b
+B3b = B;
+B3b(:,3) = 0;
+Con = contMat(A,B3b);
+if exist('prob3b1.txt','file')
+  delete('prob3b1.txt');
+end
+if exist('prob3b0.txt','file')
+  delete('prob3b0.txt');
+end
+rank3b = double(rank(Con));
+if rank3b == size(A,1)
+  fid = fopen('prob3b1.txt','wt');
+else
+  fid = fopen('prob3b0.txt','wt');
+end
+fprintf(fid,'%d',rank3b);
+fclose(fid);
+disp(rank3b)
+%{
+\end{lstlisting}}
+
+The rank of the controllability matrix is 
+\IfFileExists{./prob3b1.txt}{\input{prob3b1.txt}}{\input{prob3b0.txt}}.
+Thus the system is \IfFileExists{./prob3b0.txt}{\emph{not}}{}
+controllable. 
+
+
+\item  $u_1$ and $u_3$ ;
+\item[]
+{\singlespacing
+\begin{lstlisting}
+%}
+%% Problem 3c
+B3c = B;
+B3c(:,2) = 0;
+Con = contMat(A,B3c);
+if exist('prob3c1.txt','file')
+  delete('prob3c1.txt');
+end
+if exist('prob3c0.txt','file')
+  delete('prob3c0.txt');
+end
+rank3c = double(rank(Con));
+if rank3c == size(A,1)
+  fid = fopen('prob3c1.txt','wt');
+else
+  fid = fopen('prob3c0.txt','wt');
+end
+fprintf(fid,'%d',rank3c);
+fclose(fid);
+disp(rank3c)
+%{
+\end{lstlisting}}
+
+The rank of the controllability matrix is 
+\IfFileExists{./prob3c1.txt}{\input{prob3c1.txt}}{\input{prob3c0.txt}}.
+Thus the system is \IfFileExists{./prob3c0.txt}{\emph{not}}{}
+controllable. 
+
+
+\item $u_2$ and $u_3$.
+\item[]
+{\singlespacing
+\begin{lstlisting}
+%}
+%% Problem 3a
+B3d = B;
+B3d(:,1) = 0;
+Con = contMat(A,B3d);
+if exist('prob3d1.txt','file')
+  delete('prob3d1.txt');
+end
+if exist('prob3d0.txt','file')
+  delete('prob3d0.txt');
+end
+rank3d = double(rank(Con));
+if rank3d == size(A,1)
+  fid = fopen('prob3d1.txt','wt');
+else
+  fid = fopen('prob3d0.txt','wt');
+end
+fprintf(fid,'%d',rank3d);
+fclose(fid);
+disp(rank3d)
+%{
+\end{lstlisting}}
+
+The rank of the controllability matrix is 
+\IfFileExists{./prob3d1.txt}{\input{prob3d1.txt}}{\input{prob3d0.txt}}.
+Thus the system is \IfFileExists{./prob3d0.txt}{\emph{not}}{}
+controllable. 
+
+
 \end{enumerate}
 
+
+\begin{matlabc}
+%}
+%% LaTeX the document...
+system('pdflatex hw8.m > \dev\null');
+system('pdflatex hw8.m > \dev\null');
+%clear all
+%close all
+%{
+\end{matlabc}
 
 
 \end{document}
