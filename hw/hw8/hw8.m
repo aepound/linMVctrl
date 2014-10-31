@@ -156,7 +156,7 @@ C = [ 1 0 0 0 0 0; ...
       0 0 1 0 0 0; ...
       0 0 0 0 1 0];
 % A function to compute the controllability matrix:
-contMat = @(A,B) [A^0 A^1 A^2 A^3 A^4 A^5]*repmat(B,6,1);
+contMat = @(A,B) [B A*B A^2*B A^3*B A^4*B A^5*B];
 %{
 \end{matlabc}
 
@@ -169,17 +169,28 @@ contMat = @(A,B) [A^0 A^1 A^2 A^3 A^4 A^5]*repmat(B,6,1);
 \begin{lstlisting}
 %}
 Con = contMat(A,B);
-if exist('prob1a.txt','file')
-  delete('prob1a.txt');
+if exist('prob1a1.txt','file')
+  delete('prob1a1.txt');
 end
-diary('prob1a.txt')
-rank(Con)
-diary off 
+if exist('prob1a0.txt','file')
+  delete('prob1a0.txt');
+end
+rank1 = double(rank(Con));
+if rank1 == 6
+  fid = fopen('prob1a1.txt','wt');
+else
+  fid = fopen('prob1a0.txt','wt');
+end
+fprintf(fid,'%d',rank1);
+fclose(fid);
+disp(rank1)
+
 %{
 \end{lstlisting}}
 The output from the rank command is shown below.
 {\singlespacing
-\lstinputlisting{prob1a.txt}  
+\IfFileExists{prob1a0.txt}{\lstinputlisting{prob1a0.txt}}
+{\lstinputlisting{prob1a1.txt}}  
 }
 Thus, the system is \emph{not}
 controllable.
@@ -214,12 +225,94 @@ differential equations of this system are written as
 where $k$ is the motor torque constant, $R$ is the motor resistance, 
 $r$ is the ratio of motor torque to linear force applied to the cart
 ($\tau = rf$), and $e$ is the voltage applied to the motor. Let the
-state vector and input be defined $x = [x, \dot{x}, \theta,\thetadot]$
- and $u = e$. 
+state vector and input be defined $\xbf = [x, \dot{x},
+\theta,\thetadot]^T$  and $u = e$. 
  \begin{enumerate}[label={(\alph*)}]
  \item Find the A and B matrices of the state space
- \item 
+ \item[] The first thing is to rearrange the equations as 
+\begin{equation*}
+  \begin{split}
+    \xddot &=- \frac{k^2}{Mr^2R}\xdot - \frac{mg}{M}\theta 
+    + \frac{k}{MRr}e \\
+    \thetaddot &= \left(\frac{M+m}{Ml}\right)g\theta +
+    \frac{k^2}{Mr^2Rl}\xdot 
+    + \frac{k}{MRrl}e.
+  \end{split}
+\end{equation*}
+The we can stack these to form
+\begin{equation*}
+  \begin{split}
+    \xbf =
+    \begin{bmatrix}
+      \xdot \\ \xddot \\ \thetadot \\ \thetaddot
+    \end{bmatrix}
+    &=
+    \begin{bmatrix}
+      0 & 1 & 0 & 0\\
+      0 & \frac{-k^2}{Mr^2R} & \frac{-mg}{M} & 0\\
+      0 & 0 & 0 & 1\\
+      0 & \frac{k^2}{Mr^2Rl} & \frac{M+m}{Ml}g & 0
+    \end{bmatrix}
+    \begin{bmatrix}
+      x \\ \xdot \\ \theta \\ \thetadot
+    \end{bmatrix}
+ + 
+ \begin{bmatrix}
+   0 \\ \frac{k}{MRr} \\ 0 \\ \frac{k}{MRrl}
+ \end{bmatrix}e.
+  \end{split}
+\end{equation*}
+
  \item Is the system controllable?
+ \item[]
+
+
+{\singlespacing
+\begin{lstlisting}
+%}
+%% Problem 2.
+m = 0.1; 
+M = 1;
+l = 1;
+g = 9.8;
+k = 1;
+R = 100;
+r = 0.02;
+
+syms m M l g k R r;
+
+contMat = @(A,B) [B A*B A^2*B A^3*B];
+
+A = [ 0 1 0 0;...
+      0 -k^2./(M*r^2*R) -m*g/(M) 0;...
+      0 0 0 1;
+      0 k^2/(M*r^2*R*l) (M+m)/(M*l)*g 0];
+
+B = [ 0; k/(M*R*r); 0; k/(M*R*r*l)];
+
+Con = contMat(A,B);
+if exist('prob2b1.txt','file')
+  delete('prob2b1.txt');
+end
+if exist('prob2b0.txt','file')
+  delete('prob2b0.txt');
+end
+rank2 = double(rank(Con));
+if rank2 == 6
+  fid = fopen('prob2b1.txt','wt');
+else
+  fid = fopen('prob2b0.txt','wt');
+end
+fprintf(fid,'%d',rank2);
+fclose(fid);
+disp(rank2)
+
+%{
+\end{lstlisting}}
+The rank of the controllability matrix is 
+\IfFileExists{./prob2b1.txt}{\input{prob2b1.txt}}{\input{prob2b0.txt}}.
+Thus the system is \IfFileExists{./prob2b0.txt}{\emph{not}}{}
+controlable. 
  \end{enumerate}
 The following numerical data can be used if would rather use numbers
 then letters:
@@ -227,46 +320,6 @@ $m = 0.1kg$, $M = 1.0kg$, $l = 1.0m$, $g = 9.8ms^{-2}$, $k = 1V$, $R =
 100\Omega$,  
 and $r = 0.02m$.
 
-
-The gains for stablizing the inverted pendulum on a motor-driven cart
-are to be optimized using a performance criterion of the form
-\begin{equation*}
-  J_{lqr} = \int_0^\infinity (q_1^2x_1^2 + q_3^2x_3^2 + r^2u^2)dt
-\end{equation*}
-
-A pendulum angle much greater than $1 degree =0.0017 rad$ would be
-precarious. Thus a heavy weighting on $\theta = x_3$ is indicated: 
-$q^2_3 =\frac{1}{(0.017)^2 }\approx 3000$. For the physical dimensions
-of the system, a position error of the order $10cm = 0.1m$ is not
-unreasonable. Hence  $q^2_1 =\frac{1}{(0.1)^2} =100$.
-
-\begin{enumerate}[label=(\alph*)]
-\item Using these values of $q_1^2$ and $q_3^2$ determine and plot the
-  gain matrices, corresponding closed loop poles, states $x(t)$ and
-  $u(t)$ (for same initial conditions) as a function of the control
-  weighting parameter $r^2$ for $0.001 < r^2 < 50$. You can follow the
-  Inverted pendulum on cart \matlab example covered in the class
-  (follow ``IPonCartLqrPlots.m'' (main executable file) and
-  ``InvertedPendulumonCartLQR.m'' in ``Optimal Control.zip''.
-\end{enumerate}
-
-To avoid confusion, we will let our state vector be denoted 
-$\xbf = \left[\begin{smallmatrix} y &  \theta & \ydot &
-    \thetadot \end{smallmatrix}\right]^T$.  Thus, $y$ is our
-position. 
-
-\subsubsection{The LQR Controller}
-The code to model the inverted pendulum on a cart along with the LQR
-controller is given in the file \emph{InvertedPendulumonCartLQR.m}  The
-code is listed below.
-
-
-
-\begin{matlabc}
-%}
-% Matlab code here...
-%{
-\end{matlabc}
 
 \section{Problem 3}
 
@@ -299,6 +352,34 @@ u_1 \\ u_2 \\ u_3
 \end{equation*}
 Determine whether or not the evaporator is controllable from each of
 the following combinations of inputs:
+
+\subsection{My Answer}
+First, let's put them into \matlab.
+
+{\singlespacing
+\begin{lstlisting}
+%}
+%% Problem 3
+
+A = [...
+     0 -.00156 -.0711 0 0;...
+     0 -.1419  .0711  0 0;...
+     0 -.00875 -1.102 0 0;...
+     0 -.00128 -.1489 0 -.0013;...
+     0 .0605   .1489  0 -.0591];
+
+B = [...
+     0 -.143  0; ...
+     0 0      0;...
+     0 0      .392;...
+     0 .108   -.0592;...
+     0 -.0486 0];
+
+contMat = @(A,B) [B A*B A^2*B A^3*B A^4*B];
+%{
+\end{lstslisting}}
+
+
 \begin{enumerate}[label={(\alph*)}]
 \item $u_1$ only;
 \item 
