@@ -150,7 +150,7 @@ Plugging that back into the the other equation, we get
 \end{equation*}
 Using the quadratice formula, we get the following for $k_2$
 \begin{equation*}
-  k_2 = \frac{25 \pm \sqrt{25^2 - 4(-8)(-17)}}{2(-8)} \approx \{2.125,1\}
+  k_2 = \frac{-25 \pm \sqrt{25^2 - 4(-8)(-17)}}{2(-8)} \approx \{2.125,1\}
 \end{equation*}
 Let's choose $k_2 = 1$, then 
 \begin{equation*}
@@ -223,16 +223,16 @@ The characteristice polynomial from this is
   &= (s-1+k_1)\left[s^2+(k_3-2)s +1+ k_2-k_3 \right] + k_1\left[ -
     (2+k_3)s+3-k_2+k_3\right]\\
   &= \left[s^3 + (k_1  + k_3 - 3)s^2 + (3 - 2k_3 + k_2 -2k_1 +
-    k_1k_3)s + (k_1k_2 - k_1k_3 + k_1 - k_2 + k_3 - 1)\right]\\
-  &\qquad  + \left[(-2k_1 - k_1k_3)s + (-k_1 - k_1k_2 -
+    k_1k_3)s + (k_1k_2 - k_1k_3 + k_1 - k_2 + k_3 - 1     )\right]\\
+  &\qquad  + \left[(-2k_1 - k_1k_3)s + (3k_1 - k_1k_2 +
     k_1k_3)\right]\\
   &= s^3 + (k_1  + k_3 - 3)s^2 + (3 - 2k_3 + k_2 -2k_1 +
     k_1k_3 -2k_1 - k_1k_3)s  \\
-  & \qquad + (k_1k_2 - k_1k_3 + k_1 - k_2 + k_3 - 1-k_1 - k_1k_2 -
-    k_1k_3)\\
-  &= s^3 + (k_1  + k_3 - 3)s^2 + (3 - 2k_3 + k_2 -2k_1 +
-    k_1k_3 -2k_1 - k_1k_3)s  \\
-  & \qquad + (-2 k_1k_3  - k_2 + k_3 - 1 )\\
+  & \qquad +(k_1k_2 - k_1k_3 + k_1 - k_2 + k_3 - 1-k_1 - k_1k_2 -
+    k_1k_3 + 3k_1 - k_1k_2 + k_1k_3)\\
+%  &= s^3 + (k_1  + k_3 - 3)s^2 + (3 - 2k_3 + k_2 -2k_1 +
+%    k_1k_3 -2k_1 - k_1k_3)s  \\
+%  & \qquad + (-2 k_1k_3  - k_2 + k_3 - 1 )\\
 \end{split}
 \end{equation*}
 
