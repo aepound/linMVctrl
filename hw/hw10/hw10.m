@@ -90,13 +90,87 @@ Given
   \end{bmatrix} x(t).
 \end{split}
 \end{equation*}
-Finde the state feedback gain $k$ so that the state feedback system
+Find the state feedback gain $k$ so that the state feedback system
 has -1 and -2 as its eigenvalues.  Compute k directly without using
 similarity transformation. \emph{Do not use matlab. Please show your
   work.}
 
 \subsection{My Answer}
+Let $u = r - kx$, then
+\begin{equation*}
+  \xdot = \left(\begin{bmatrix}
+    2 & 1 \\ -1 & 1
+  \end{bmatrix}-
+  \begin{bmatrix}
+    k_1 & k_2 \\ 2k_1 & k_2
+\end{bmatrix}\right)x(t)+
+  \begin{bmatrix}
+    1 \\ 2
+  \end{bmatrix}r(t)
+\end{equation*}
+Thus, $(sI - \Abar)$ becomes:
+\begin{equation*}
+  \begin{bmatrix}
+    s - 2 + k_1 & -1+k_2 \\ 1+2k_2 & s-1+2k_2
+  \end{bmatrix}
+\end{equation*}
+\begin{equation*}
+\begin{split}
+  \Delta_f(s) &= (s-2+k_1)(s-1+2k_2) - (1-2k_1)(-1+k_2)\\
+  &= s^2 - 2s + k_1s -s + 2 -k_1+2k_2s - 4k_2 +2k_1k_2 - (-1 + k_2
+  +2k_1 -2k_1k_2)\\ 
+  &= s^2 +(-2 + k_1 -1 + 2k_2)s + (2 - k_1-4k_2 + 2k_1k_2 +1 - k_2 -
+  2k_1 + 2k_1k_2)\\
+  &= s^2 + (-3 + k_1 + 2k_2)s +(3-3k_1-5k_2 + 4k_1k_2)
+\end{split}
+\end{equation*}
+We want this to be:
+\begin{equation*}
+  (s+1)(s+2) = s^2 + 3s + 2.
+\end{equation*}
+Thus,
+\begin{equation*}
+  \begin{split}
+    3 &= -3 + k_1 + 2k_2\\
+    2 &= 3-3k_1-5k_2 + 4k_1k_2
+  \end{split}
+\end{equation*}
+So, using substitution, we solve first for $k_1$ to get
+\begin{equation*}
+  k_1 = 6 - 2k_2.
+\end{equation*}
+Plugging that back into the the other equation, we get
+\begin{equation*}
+\begin{split}
+    2 &= 3-3(6 - 2k_2)-5k_2 + 4(6 - 2k_2)k_2\\
+    2 &= 3-18 + 6k_2 -5k_2+ (24 - 8k_2)k_2\\
+    2 &= -8k_2^2 + 24k_2 + k_2 - 15\\
+    0 &=-8k_2^2 + 25k_2 - 17
+\end{split}
+\end{equation*}
+Using the quadratice formula, we get the following for $k_2$
+\begin{equation*}
+  k_2 = \frac{25 \pm \sqrt{25^2 - 4(-8)(-17)}}{2(-8)} \approx \{2.125,1\}
+\end{equation*}
+Let's choose $k_2 = 1$, then 
+\begin{equation*}
+  k_1 = 6 - 2(1) = 4.
+\end{equation*}
 
+Double check:
+\begin{equation*}
+  \begin{split}
+    -3 + 4 + 2*1 &= 3 \\
+3 - 3*4 - 5*1 + 4*4*1 &= 2
+  \end{split}
+\end{equation*}
+Thus our gain vector is 
+\begin{equation*}
+  k =
+  \begin{bmatrix}
+    4 & 1
+  \end{bmatrix}.
+\end{equation*}
 
 \section{Problem 2}
 Find the state feedback gain for the state equation
@@ -117,6 +191,52 @@ the method you think is the simplest by hand to carry out the design.
 \emph{Do not use matlab. Please show your  work.}
 
 \subsection{My Answer}
+The desired charateristic polynomial is 
+\begin{equation*}
+  \begin{split}
+  \Delta_f(s) 
+  &= (s + 2)(s + 1 + j)(s + 1 - j) \\
+  &= (s + 2)(s^2 + 2s + 2)\\
+  &= s^3 + 4s^2 + 6 s + 4.
+  \end{split}
+\end{equation*}
+
+Calculating $(sI = \Abar)$, we get
+\begin{equation*}
+  \begin{split}
+  (sI - A + kB) &=
+  \begin{bmatrix}
+    s - 1 + k_1 & -1 + k_2 & 2 + k_3\\
+    0 & s - 1 & -1\\
+    k_1 & k_2 & s- 1+k_3
+  \end{bmatrix}
+  \end{split}
+\end{equation*}
+The characteristice polynomial from this is
+\begin{equation*}
+\begin{split}
+  \Delta_f(s) &= 
+  (s-1+k_1)\left[(s-1)(s-1+k_3) + k_2\right] + k_1\left[(-1+k_2)(-1) -
+    (s-1)(2+k_3)\right]\\
+  & = (s-1+k_1)\left[s^2-s +k_3s-s+1-k_3 + k_2\right] + k_1\left[1-k_2 -
+    2s-k_3s+2+k_3\right]\\
+  &= (s-1+k_1)\left[s^2+(k_3-2)s +1+ k_2-k_3 \right] + k_1\left[ -
+    (2+k_3)s+3-k_2+k_3\right]\\
+  &= \left[s^3 + (k_1  + k_3 - 3)s^2 + (3 - 2k_3 + k_2 -2k_1 +
+    k_1k_3)s + (k_1k_2 - k_1k_3 + k_1 - k_2 + k_3 - 1)\right]\\
+  &\qquad  + \left[(-2k_1 - k_1k_3)s + (-k_1 - k_1k_2 -
+    k_1k_3)\right]\\
+  &= s^3 + (k_1  + k_3 - 3)s^2 + (3 - 2k_3 + k_2 -2k_1 +
+    k_1k_3 -2k_1 - k_1k_3)s  \\
+  & \qquad + (k_1k_2 - k_1k_3 + k_1 - k_2 + k_3 - 1-k_1 - k_1k_2 -
+    k_1k_3)\\
+  &= s^3 + (k_1  + k_3 - 3)s^2 + (3 - 2k_3 + k_2 -2k_1 +
+    k_1k_3 -2k_1 - k_1k_3)s  \\
+  & \qquad + (-2 k_1k_3  - k_2 + k_3 - 1 )\\
+\end{split}
+\end{equation*}
+
+
 
 \section{Problem 3}
 Consider the continuous-time state space equation
