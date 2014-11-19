@@ -358,8 +358,21 @@ Thus, we know that
   {\alpha}_2 &= 3 \\
   {\alpha}_3 &= -1.
 \end{align*}
+Using these, we now know our $\kbar$
+\begin{equation*}
+  \kbar =
+  \begin{bmatrix}
+    \bar{\alpha}_1 -\alpha_1 &
+    \bar{\alpha}_2 -\alpha_2 &
+    \bar{\alpha}_3 -\alpha_3 
+  \end{bmatrix}
+  =\begin{bmatrix}
+    7 & 3 & 5
+  \end{bmatrix}.
+\end{equation*}
 
-Now, let's for the controllability matrix.
+
+Now, let's form the controllability matrix.
 First, let's calculate $A^2$.
 \begin{equation*}
   \begin{split}
@@ -392,7 +405,7 @@ Thus, we can calculate the components of the controllability matrix as
 \end{align*}
 Now, we can build the controllability matrix.
 \begin{equation*}
-  C =
+  C_{con} =
   \begin{bmatrix}
     \bbf & A\bbf & A^2\bbf
   \end{bmatrix}
@@ -402,11 +415,111 @@ Now, we can build the controllability matrix.
 \end{equation*}
 Ok. Using this, we can find our $P^{-1}$ as
 \begin{equation*}
-  P^{-1} = C\bar{C}^{-1}.
+  P^{-1} = C_{con}\bar{C}_{con}^{-1} =.
 \end{equation*}
 
+We also need to calculate our $\Cbar_{con}$ matrix:
+\begin{align*}
+  \Abar &=
+  \begin{bmatrix}
+    -\alpha_1 & -\alpha_2 & -\alpha_3\\
+    1 & 0 & 0 \\
+    0 & 1& 0 
+  \end{bmatrix}
+  & \bbar &=
+  \begin{bmatrix}
+    1 \\ 0 \\ 0
+  \end{bmatrix}
+  & \Abar^2 &= 
+  \begin{bmatrix}
+    \alpha_1^2-\alpha_2 & \alpha_1\alpha_2 - \alpha_3 & \alpha_1\alpha_3\\
+    -\alpha_1 & -\alpha_2 & -\alpha_3\\
+    1 & 0 & 0
+  \end{bmatrix}\\
+  \Abar\bbar &=
+  \begin{bmatrix}
+    \alpha_1 \\ 1 \\ 0
+  \end{bmatrix}
+  & \Abar^2\bbar &= 
+  \begin{bmatrix}
+    \alpha_1^2 - \alpha_2\\ -\alpha_1 \\ 1
+  \end{bmatrix}
+  & \Cbar_{con} &= 
+  \begin{bmatrix}
+    1 &-\alpha_1& \alpha_1^2 - \alpha_2\\
+    0 & 1 & -\alpha_1 \\ 0 & 0 & 1
+  \end{bmatrix} =
+  \begin{bmatrix}
+    1 & 3 & 6 \\ 0 & 1 & 3\\ 0 & 0 & 1
+  \end{bmatrix}
+\end{align*}
+Taking the inverse of $\Cbar_{con}$, we get
+\begin{equation*}
+  \Cbar_{con}^{-1} =
+  \begin{bmatrix}
+    1 & -3 & 3\\ 0 & 1 & -3 \\ 0 & 0 & 1
+  \end{bmatrix}.
+\end{equation*}
+Then we get 
+\begin{equation*}
+  P^{-1} = C_{con}\Cbar_{con}^{-1} =
+  \begin{bmatrix}
+       1 & -1 & -2\\ 0 & 1 & 2\\ 1 & 0 & 1
+  \end{bmatrix}
+  \begin{bmatrix}
+    1 & -3 & 3\\ 0 & 1 & -3 \\ 0 & 0 & 1
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    1 & -4 & 4 \\ 0 & 1 & -1 \\ 1 & -2 & 1
+  \end{bmatrix}
+\end{equation*}
+And thus, 
+\begin{equation*}
+  P =
+  \begin{bmatrix}
+    1 & 4 & 0 \\ 1 & 3 & -1 \\ 1 & 2 & -1
+  \end{bmatrix}
+\end{equation*}
+And using this transformation matrix, we can get our gain vector  $k$ as
+\begin{equation*}
+  k = \kbar P =
+  \begin{bmatrix}
+    7 & 3 & 5
+  \end{bmatrix}
+  \begin{bmatrix}
+    1 & 4 & 0 \\ 1 & 3 & -1 \\ 1 & 2 & -1
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    15 & 47 & -8
+  \end{bmatrix}.
+\end{equation*}
+The same as before.  (Using a different method... Dang it! Why did I just put all
+this time into this!!!)
 
-
+Ok, the feed forward gain to match any step input can be found by using the
+transformed $\Cbar$ matrix.
+\begin{equation*}
+  \Cbar = CP^{-1} =
+  \begin{bmatrix}
+    2 & 0 & 0
+  \end{bmatrix}
+  \begin{bmatrix}
+    1 & -4 & 4 \\ 0 & 1 & -1 \\ 1 & -2 & 1
+  \end{bmatrix} = 
+  \begin{bmatrix}
+    2 & -8 & 8
+  \end{bmatrix} = 
+  \begin{bmatrix}
+    \beta_1 &    \beta_2 &    \beta_3 
+  \end{bmatrix}
+\end{equation*}
+And from my notes from class, the feedforward gain to be able to track and step
+input $a$ is
+\begin{equation*}
+  p = \frac{\bar{\alpha_3}}{\beta_3} = \frac{4}{8} = \frac{1}{2}.
+\end{equation*}
 
 
 \section{Problem 4}
@@ -433,6 +546,8 @@ equation stabilizable?
 
 \subsection{My Answer}
 
+
+I'm not sure yet... I'll get to this problem next...
 \section{Problem 5}
 The cart carrying the inverted pendulum is driven by an electric motor.
 Assume that the motor drives one pair of the wheels of the cart, so that
@@ -472,6 +587,8 @@ and $r = 0.02m$.
 
 
 \subsection{My Answer}
+
+I'll work on this after I figure out problem 4.
 
 
 
