@@ -228,14 +228,75 @@ The characteristice polynomial from this is
     k_1k_3)\right]\\
   &= s^3 + (k_1  + k_3 - 3)s^2 + (3 - 2k_3 + k_2 -2k_1 +
     k_1k_3 -2k_1 - k_1k_3)s  \\
-  & \qquad +(k_1k_2 - k_1k_3 + k_1 - k_2 + k_3 - 1-k_1 - k_1k_2 -
-    k_1k_3 + 3k_1 - k_1k_2 + k_1k_3)\\
-%  &= s^3 + (k_1  + k_3 - 3)s^2 + (3 - 2k_3 + k_2 -2k_1 +
-%    k_1k_3 -2k_1 - k_1k_3)s  \\
-%  & \qquad + (-2 k_1k_3  - k_2 + k_3 - 1 )\\
+  & \qquad +(k_1k_2 - k_1k_3 + k_1 - k_2 + k_3 - 1 + 3k_1 - k_1k_2 +
+    k_1k_3)\\
+  &= s^3 + (k_1  + k_3 - 3)s^2 + (3 -4k_1+ k_2 - 2k_3  )s  +(4k_1 - k_2 + k_3 - 1)
 \end{split}
 \end{equation*}
+Thus we know that we need
+\begin{equation*}
+  \begin{split}
+    4 &= k_1  + k_3 - 3\\
+    6 &= -4k_1+ k_2 - 2k_3 + 3\\
+    4 &= 4k_1 - k_2 + k_3 - 1.
+  \end{split}
+\end{equation*}
+Then we know that 
+\begin{equation*}
+  k_1 = 7 - k_3.
+\end{equation*}
+Substituting this back in we get:
+\begin{equation*}
+\begin{split}
+  6 &= 3 -4k_1+ k_2 - 2k_3\\
+  &= 3 -4(7 - k_3)+ k_2 - 2k_3\\
+  &= 3 - 28 + 4k_3 + k_2 - 2k_3\\
+  &= -25 + k_2 + 2k_3\\
+  31 &= k_2 + 2k_3\\
+  k_2& = 31 - 2k_3.
+\end{split}
+\end{equation*}
+Then we can substitute both of these into the third equation to get
+\begin{equation*}
+  \begin{split}
+    4 &=  4k_1 - k_2 + k_3 - 1\\
+    & = 4(7 - k_3) - (31 - 2k_3) + k_3 - 1\\
+    &= 28 - 4k_3 - 31 +2k_3 + k_3 - 1\\
+    &= -3 -k_3 - 1\\
+    &= -4 - k_3\\
+    k_3 &= -8.    
+  \end{split}
+\end{equation*}
+Together, we have
+\begin{equation*}
+  \begin{split}
+    k_1 &= 7 - k_3 = 7 + 8 = 15\\
+    k_2 &= 31 - 2(-8) = 31 + 16 = 47\\
+    k_3 &= -8.
+  \end{split}
+\end{equation*}
+Doublecheck to make sure it works.
+\begin{equation*}
+  \begin{split}
+  k1+ k3 - 3 &=15- 8 - 3 = 4 \quad \checkmark\\
+  -4k_1 + k_2 - 2k_3 + 3 &= -4(15) + 47  - 2(-8) + 3 = 6 \quad
+  \checkmark\\
+  4k_1 - k_2 + k_3 - 1 &= 4(15) - 47 - 8 -1 = 4 \quad \checkmark
+  \end{split}
+\end{equation*}
 
+
+\begin{matlabc}
+%}
+% This is for doublechecking again... ;)
+A = [1 0 1; -4 1 -2; 4 -1 1];
+b = [4; 6; 4];
+a = [-3 ; 3; -1];
+% The system is:
+% b = A*k + a
+k = inv(A)*(b-a)
+%{
+\end{matlabc}
 
 
 \section{Problem 3}
@@ -263,9 +324,93 @@ $-1 \pm j1$ and will track asymptotically any step reference input.
 \emph{Validate results by \matlab plots.}
 
 \subsection{My Answer}
+The desired charateristic polynomial is 
+\begin{equation*}
+  \begin{split}
+  \Delta_f(s) 
+  &= (s + 2)(s + 1 + j)(s + 1 - j) \\
+  &= (s + 2)(s^2 + 2s + 2)\\
+  &= s^3 + 4s^2 + 6 s + 4.
+  \end{split}
+\end{equation*}
+Thus, we know that 
+\begin{align*}
+  \bar{\alpha}_1 &= 4 &
+  \bar{\alpha}_2 &= 6 \\
+  \bar{\alpha}_3 &= 4
+\end{align*}
+
+Ok, let's calculate the charateristic polynomila of the current
+system.
+\begin{equation*}
+\det(sI - A) = \det\left(
+  \begin{bmatrix}
+    s - 1 & -1 & 2\\
+    0 &s - 1 & -1\\
+    0 & 0 & s-1
+  \end{bmatrix}\right)
+ = (s-1)^3 = s^3 - 3s^2 + 3s -1.
+\end{equation*}
+
+Thus, we know that 
+\begin{align*}
+  {\alpha}_1 &= -3 &
+  {\alpha}_2 &= 3 \\
+  {\alpha}_3 &= -1.
+\end{align*}
+
+Now, let's for the controllability matrix.
+First, let's calculate $A^2$.
+\begin{equation*}
+  \begin{split}
+    A^2 &= 
+    \begin{bmatrix}
+      1 & 1 & -2\\ 0 & 1 & 1\\ 0 & 0 & 1
+    \end{bmatrix}
+    \begin{bmatrix}
+      1 & 1 & -2\\ 0 & 1 & 1\\ 0 & 0 & 1
+    \end{bmatrix} =
+    \begin{bmatrix}
+      1 & 2 & -3\\ 0 & 1 & 2\\ 0 & 0 & 1
+    \end{bmatrix}
+  \end{split}
+\end{equation*}
+Thus, we can calculate the components of the controllability matrix as
+\begin{align*}
+  \bbf &=
+  \begin{bmatrix}
+    1 \\ 0 \\ 1
+  \end{bmatrix}
+  & A\bbf &= 
+  \begin{bmatrix}
+    -1 \\ 1\\ 1
+  \end{bmatrix}
+  & A^2\bbf &= 
+  \begin{bmatrix}
+    -2 \\ 2 \\ 1
+  \end{bmatrix}
+\end{align*}
+Now, we can build the controllability matrix.
+\begin{equation*}
+  C =
+  \begin{bmatrix}
+    \bbf & A\bbf & A^2\bbf
+  \end{bmatrix}
+  = \begin{bmatrix}
+       1 & -1 & -2\\ 0 & 1 & 2\\ 1 & 0 & 1
+  \end{bmatrix}.
+\end{equation*}
+Ok. Using this, we can find our $P^{-1}$ as
+\begin{equation*}
+  P^{-1} = C\bar{C}^{-1}.
+\end{equation*}
+
+
+
+
 
 \section{Problem 4}
-Consider the uncontrollable state equaiton
+Consider the uncontrollable state equation
 \begin{equation*}
 \begin{split}
   \xdot(t) &=
