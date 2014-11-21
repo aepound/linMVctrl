@@ -76,8 +76,9 @@ end
 
 inds = [backWaist fliplr(shoulders)];
 clear fh
-clf(4)
+
 figure(4)
+clf(4)
 for iter = 1:size(d,1)
     if ~any(isnan(d(iter,inds,:)))
         if exist('fh','var')
@@ -91,9 +92,9 @@ for iter = 1:size(d,1)
         mnz = mean(zs);
         fh = fill3(xs - mnx,ys - mny,zs-mnz,'r');
         %if iter == 1
-            zlabel('z');zlim([-300 300])
-            ylabel('y');ylim([-400 400])
-            xlabel('x');xlim([-400 400])
+        zlabel('z');zlim([-300 300])
+        ylabel('y');ylim([-400 400])
+        xlabel('x');xlim([-400 400])
         %end
         pause(.1)
     end
