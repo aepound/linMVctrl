@@ -92,3 +92,6 @@ sympy-plots-for-*.tex/
 *~
 # matlab autosave files
 *.asv
+
+# Data files
+*.c3d
