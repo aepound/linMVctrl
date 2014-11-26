@@ -1,0 +1,182 @@
+\documentclass[12pt, twocolumn]{article}
+
+%\usepackage{fullpage}
+\usepackage{setspace}
+%\doublespacing
+
+\usepackage{graphicx}
+\input{symbolmac}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{euscript}
+\usepackage{latexsym}
+\makeatletter
+    \@ifclassloaded{beamer}
+    {}% Don't want to use this in the beamer class, either. 
+    { %
+\usepackage[dvipsnames,usenames]{xcolor}
+}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+
+\makeatother
+\usepackage{subcaption}
+\usepackage{booktabs}
+
+
+% I thought about adding this in to be able to switch between lscape
+% and pdflscape... but decided I didn't need to...
+%\usepackage{ifpdf}
+%\ifpdf
+%\usepackage{pdflscape}
+%\else
+\usepackage{lscape}
+%\fi
+
+\usepackage{cleveref}
+
+\providecommand{\abs}[1]{\lvert#1\rvert}
+\providecommand{\norm}[1]{\lVert#1\rVert}
+\definecolor{dark-gray}{gray}{0.2}
+\definecolor{light-gray}{gray}{0.3}
+\newcommand{\myrule}{\textcolor{light-gray}{\noindent\rule{\linewidth}{0.07mm}}\\}
+\newcommand{\editmark}{\begin{center}\textcolor{light-gray}{\noindent\rule{\linewidth}{0.07mm}}\\ 
+    To be Edited:\end{center}} 
+\renewcommand{\matlab}{{\sc Matlab }} 
+\newcommand{\edit}[1]{\editmark \textcolor{dark-gray}{#1}\\\myrule}
+
+\newcommand{\etal}{et~al.~}
+
+\usepackage{comment}
+
+
+%% ******** For code: ******************
+\usepackage{listings}
+%\usepackage[usenames,dvipsnames]{color}
+%% ******** Define the language: *******
+\lstdefinelanguage{matlabfloz}{%
+	alsoletter={...},%
+	morekeywords={% 						% keywords
+	break,case,catch,continue,elseif,else,end,for,function,global,%
+	if,otherwise,persistent,return,switch,try,while,...,
+        classdef,properties,methods},%
+	comment=[l]\%,% 						% comments
+	morecomment=[l]...,% 					% comments
+	morestring=[m]',%   						% strings 
+}[keywords,comments,strings]%
+\lstdefinestyle{matlab}{language=matlabfloz,	
+		keywordstyle=\color[rgb]{0,0,1},					
+		commentstyle=\color[rgb]{0.133,0.545,0.133},	% comments
+		stringstyle=\color[rgb]{0.627,0.126,0.941},	% strings
+		numbersep=3mm, numbers=left, numberstyle=\tiny% number style
+}
+%% ******** Set the style: **************
+\lstset{style=matlab}
+
+%\newcommand{\matlab}{{\sc Matlab }} % Or 
+\renewcommand{\matlab}{{\sc Matlab }} 
+
+\title{ECE 6320 Project Proposal\\
+  Dual Axis Control of a Back-Mounted Thrust System
+}
+\author{Andrew Pound and Dean Lanier}
+\date{\today}
+
+
+
+\begin{document}
+\maketitle
+
+% \begin{abstract}
+% The ability to augment human performance with technology can provide
+% many benefits.  It has been demonstrated that a booster mounted on the
+% back of a person can increase running performance \cite{sugar2014systems}.  This
+% project aims to help control the thrusters to minimize thrust in
+% directions that would not be beneficial to the user.
+% \end{abstract}
+
+
+\section{Introduction}
+% Problem statement
+%\section{Background}
+% Importance of the problem, existing work, references
+The ability to augment human performance with technology can provide
+many benefits.  It has been demonstrated that a booster mounted on the
+back of a person can increase running performance
+\cite{sugar2014systems}.  
+Kerestes and Sugar have developed a robotic project that provides
+thrust to a runner's hips.  They have produced a working prototype and
+have submitted a patent\cite{sugar2014systems}. 
+They have demonstrated in clinical trials  that the Jetpack reduces
+both time and effort required for a runner to complete a mile run.
+
+A person's body undergoes significant twisting during running.  The
+Jetpack 
+mounted on the hips of the runner will also experience some of these
+same torques, thus diminishing the efficiency of any thrust that
+cannot adapt to and correct for these torques.
+In order to be able to correct the torsion experienced by the rocket
+motors, some sort of vectoring must be possible of the force vector
+of the thrust produced. 
+
+
+\begin{figure}[tbh]
+  \centering
+  \includegraphics[width=.8\linewidth]{jetpack}
+  \caption{A photo of the Jetpack system by Kerestes and Sugar.  (From
+    the website of the Human Machine Integration Laboratory)} 
+  \label{fig:jetpack}
+\end{figure}
+
+
+
+
+
+\section{Objectives}
+
+This class
+project aims to increase the efficiency of how the Jetpack assists the runner.
+This will be accomplished by 
+modelling a controller that can inform  the rockets to
+modify the thrust to minimize the force in 
+directions that would not be beneficial to the runner (\emph{i.~e.~}
+in directions other than forward).
+The idea is that sensors can be placed on the runner's body to provide
+a semi-accurate model of how the torso is being twisted.  
+
+
+     %  \begin{tikzpicture}[domain=0:4]
+     %  \draw[very thin,color=gray] (-3.1,-3.1) grid (3.9,3.9);
+     %  \draw[->,gray] (-3.2,0) -- (4.2,0) node[right] {$x$};
+     %  \draw[->,gray] (0,-3.2) -- (0,4.2) node[above] {$y$};
+     %  \draw[-,thick] (1.5,2.5) -- (-1.5,1) -- (-1.5,-2) -- (1.5,-0.5) -- (1.5,2.5);
+     %  \draw[-,thick,blue] (2,1.75) -- (-1,.25) -- (-2,-1.75) -- (1,-0.25) -- (2,1.75);
+     %  \draw[-,dashed,blue](-1.5,-.75) -- (1.5,.75);
+     %  \draw[->,very thick] (0,0) -- (2,-1.25);
+     %  \draw[->,very thick,red] (0,0) -- (2,-.8);     
+     %  \end{tikzpicture}
+
+
+\section{Approach}
+
+We want to develop this in an iterative manner.  We hope to first
+familiarize ourselves with the mechanics of running, the physics of
+how the body twists, and find and understand equations of motion
+governing the torso while running.
+Then we will model the jetpack as a dual-axis pendulum attached to a
+platform that can change its orientation in two independent axes.
+
+
+
+
+
+%\section{Conclusion}
+
+
+
+
+\bibliographystyle{ieeetr}
+\bibliography{references}
+% \newcommand{\bibdir}{~}
+% \bibliography{\bibdir/~}
+\end{document}
