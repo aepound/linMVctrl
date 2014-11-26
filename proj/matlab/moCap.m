@@ -76,25 +76,77 @@ end
 
 %% Let's look now at a few of the time series.
 
-inds = [backWaist fliplr(shoulders)];
+inds1 = [backWaist fliplr(shoulders)];
+arminds = [shoulders; elbows; wristA];
+leginds = [backWaist; knees; ankles; toes];
+
 clear fh
 
-figure(4)
-clf(4)
-for iter = 1:size(d,1)
-    if ~any(isnan(d(iter,inds,:)))
+plotarmslegs = 1;
+cmap = jet(size(d,1));
+
+figure(5)
+clf(5)
+for iter = 50:size(d,1)
+    if ~any(isnan(d(iter,inds1,:)))
         if exist('fh','var')
             delete(fh)
         end
-        ys = d(iter,inds,2);
+        ys = d(iter,inds1,2);
         mny = mean(ys);
-        xs = d(iter,inds,1);
+        xs = d(iter,inds1,1);
         mnx = mean(xs);
-        zs = d(iter,inds,3);
+        zs = d(iter,inds1,3);
         mnz = mean(zs);
-        fh = fill3(xs - mnx,ys - mny,zs-mnz,'r');
+        
+        x0 = xs - mnx;
+        y0 = ys - mny;
+        z0 = zs - mnz;
+        fh = fill3(x0,y0,z0,'r');
+        hold on, grid on
+        G = [x0; y0; z0]';
+        [u, s, v] = svd(G,0);
+        
+        norm_len = 300;
+        normal = v(:,end); normal = normal./norm(normal);
+        normal = normal*.5*norm_len*-sign(normal(1));
+        
+        ph = plot3([0 normal(1)]',[0 normal(2)]',[0 normal(3)]',...
+                'Color',cmap(iter,:),'linewidth',2);       
+        
+            
+        if plotarmslegs
+            if exist('armhandle','var') && all(ishandle(armhandle))
+                delete(armhandle)
+            end
+            if exist('leghandle','var') && all(ishandle(leghandle))
+                delete(leghandle)
+            end
+                
+            larm = bsxfun(@minus,squeeze(d(iter,arminds(:,1),:)),[mnx mny mnz]);
+            rarm = bsxfun(@minus,squeeze(d(iter,arminds(:,2),:)),[mnx mny mnz]);
+            
+            lleg = bsxfun(@minus,squeeze(d(iter,leginds(:,1),:)),[mnx mny mnz]);
+            rleg = bsxfun(@minus,squeeze(d(iter,leginds(:,2),:)),[mnx mny mnz]);
+            
+            armhandle = plot3([larm(:,1) rarm(:,1)]...
+                             ,[larm(:,2) rarm(:,2)]...
+                             ,[larm(:,3) rarm(:,3)]...
+                             ,'Color','g'...
+                             ,'linewidth',2);
+                         
+            leghandle = plot3([lleg(:,1) rleg(:,1)]...
+                             ,[lleg(:,2) rleg(:,2)]...
+                             ,[lleg(:,3) rleg(:,3)]...
+                             ,'Color','g'...
+                             ,'linewidth',2);
+                  
+        end
+            
+            
+        
         %if iter == 1
-        zlabel('z');zlim([-300 300])
+        zlabel('z');zlim([-900 300])
         ylabel('y');ylim([-400 400])
         xlabel('x');xlim([-400 400])
         %end
@@ -103,6 +155,10 @@ for iter = 1:size(d,1)
 end
     
 
+if ~plotarmslegs
+    pause
+    delete(fh)
+end
 
 %%  Should we see about some of the other motion capture files?
 %
@@ -132,7 +188,7 @@ clf(1)
 mxnx = [-300 300];
 mxny = [-200 200];
 mxnz = [-300 300];
-for iter = 1:size(d,1)
+for iter = 1:size(Markers,1)
     if ~any(isnan(Markers(iter,inds,:)))
         if exist('fh','var')
             delete(fh)
