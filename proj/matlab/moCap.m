@@ -1,6 +1,7 @@
 %Playing with the data...
-
-motCap = importdata('Aug210106.txt');
+close all 
+clear all
+motCap = importdata('../data/accad/Aug210106.txt');
 
 cols = cellfun(@(x) strrep(x,'EricAutoLabel:',''),motCap.colheaders,'uni',false);
 cols = cols(3:end);
@@ -50,9 +51,10 @@ back_stern = [41];
 clavicle = [2];
 neck = [1];
 
-clf(3)
+
 
 figure(3)
+clf(3)
 for iter= 1:size(d,2)
     if any(iter == backWaist)
         plot3(d(:,iter,1),d(:,iter,2),d(:,iter,3),'b')
@@ -100,5 +102,64 @@ for iter = 1:size(d,1)
     end
 end
     
+
+
+%%  Should we see about some of the other motion capture files?
+%
+
+datadir = '../data/mocapclub/Game_Package_c3d';
+
+fname = [datadir '/Run_1.c3d'];
+
+[Markers,VideoFrameRate,AnalogSignals,AnalogFrameRate, ...
+    Event,ParameterGroup,CameraInfo,ResidualError]=readc3d(fname);
+
+markerlbls = ParameterGroup.Parameter(9).data;
+
+rshoulder = strmatch('RShoulder',markerlbls);
+lshoulder = strmatch('LShoulder',markerlbls);
+rhip      = strmatch('RightHip',markerlbls,'exact');
+lhip      = strmatch('LeftHip',markerlbls,'exact');
+
+%%
+clear fh
+
+inds = [lshoulder rshoulder rhip lhip];
+
+figure(1)
+clf(1)
+
+mxnx = [-300 300];
+mxny = [-200 200];
+mxnz = [-300 300];
+for iter = 1:size(d,1)
+    if ~any(isnan(Markers(iter,inds,:)))
+        if exist('fh','var')
+            delete(fh)
+        end
+        ys = Markers(iter,inds,2);
+        mny = mean(ys);
+        xs = Markers(iter,inds,1);
+        mnx = mean(xs);
+        zs = Markers(iter,inds,3);
+        mnz = mean(zs);
+        fh = fill3(xs - mnx,ys - mny,zs-mnz,'r');
+        %if iter == 1
+        %zlabel('z');zlim([-300 300])
+        %ylabel('y');ylim([-400 400])
+        %xlabel('x');xlim([-400 400])
+        %end
+        zlim(mxnz);
+        ylim(mxny);
+        xlim(mxnx);
+%        mxnx = [min(xl(1),mxnx(1)), max(xl(2),mxnx(2))]; 
+%        mxny = [min(yl(1),mxny(1)), max(yl(2),mxny(2))]; 
+%        mxnz = [min(zl(1),mxnz(1)), max(zl(2),mxnz(2))]; 
+        
+        pause(.1)
+    end
+end
+
+
 
 
