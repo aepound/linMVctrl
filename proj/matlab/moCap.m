@@ -86,26 +86,28 @@ end
 %% Take a look at the back as it is moving through time.
 % Let's look now at a few of the time series.
 
-inds1 = [backWaist fliplr(shoulders)];
-arminds = [shoulders; elbows; wristA];
+%inds1 = [backWaist fliplr(shoulders)];
+inds1 = [backWaist back_stern];
+arminds = [back_stern back_stern; shoulders; elbows; wristA];
 leginds = [backWaist; knees; ankles; toes];
 
 clear fh
 
 plotarmslegs = 1;
 cmap = jet(size(d,1));
+norms = [];
 
 figure(5)
 clf(5)
 for iter = 50:size(d,1)
     if ~any(isnan(d(iter,inds1,:)))
         if exist('fh','var')
-            %delete(fh)
+            delete(fh)
         end
         ys = d(iter,inds1,2);
-        mny = 0; %mean(ys);
+        mny = mean(ys);% 0; %
         xs = d(iter,inds1,1);
-        mnx = 0; %mean(xs);
+        mnx = mean(xs);% 0; %
         zs = d(iter,inds1,3);
         mnz = mean(zs);
         
@@ -118,8 +120,10 @@ for iter = 50:size(d,1)
         [u, s, v] = svd(G,0);
         
         norm_len = 300;
-        normal = v(:,end); normal = normal./norm(normal);
-        normal = normal*.5*norm_len*-sign(normal(1));
+        unormal = v(:,end); unormal = unormal./norm(unormal);
+        normal = unormal*.5*norm_len*-sign(unormal(1));
+        
+        norms = [norms unormal];
         
         ph = plot3([0 normal(1)]',[0 normal(2)]',[0 normal(3)]',...
                 'Color',cmap(iter,:),'linewidth',2);       
@@ -157,8 +161,8 @@ for iter = 50:size(d,1)
         
         %if iter == 1
         zlabel('z');zlim([-900 300])
-        ylabel('y');%ylim([-400 400])
-        xlabel('x');%xlim([-400 400])
+        ylabel('y');ylim([-500 500])
+        xlabel('x');xlim([-500 500])
         %end
         pause(.1)
     end
@@ -187,19 +191,22 @@ fname = [datadir '/Jog_1.c3d'];
 %datadir = '../data/mocapclub/Circus_Package_c3d';
 %fname = [datadir '/Human_Run_DW.c3d'];
 
+
 [Markers,VideoFrameRate,AnalogSignals,AnalogFrameRate, ...
     Event,ParameterGroup,CameraInfo,ResidualError]=readc3d(fname);
 
+
+%%
 markerlbls = ParameterGroup.Parameter(9).data;
 
 rshoulder = strmatch('RShoulder',markerlbls);
 lshoulder = strmatch('LShoulder',markerlbls);
 rhip      = strmatch('RightHip',markerlbls,'exact');
 lhip      = strmatch('LeftHip',markerlbls,'exact');
-if isempty(rhip)
+%if isempty(rhip)
     rhip      = strmatch('RBackWaist',markerlbls,'exact');
     lhip      = strmatch('LBackWaist',markerlbls,'exact');
-end
+%end
 
 
 lelbow    = strmatch('LeftElbow',markerlbls,'exact');
@@ -227,8 +234,10 @@ end
 ltoes     = strmatch('LToe',markerlbls,'exact');
 rtoes     = strmatch('RToe',markerlbls,'exact');
 
+spine    = strmatch('TopSpine',markerlbls,'exact');
 
-arminds2 = [lshoulder rshoulder; lelbow relbow; lwrist rwrist];
+
+arminds2 = [spine spine; lshoulder rshoulder; lelbow relbow; lwrist rwrist];
 leginds2 = [lhip rhip; lknee rknee; lankle rankle; ltoes rtoes];
 
 disp('size of data:')
@@ -236,10 +245,16 @@ disp(size(Markers))
 %%
 clear fh
 
-inds = [lshoulder rshoulder rhip lhip];
+%inds = [lshoulder rshoulder rhip lhip];
+inds = [spine rhip lhip];
+
 cmap = jet(size(Markers,1));
 figure(1)
 clf(1)
+
+staystill = 1;
+
+norms = [];
 
 mxnx = [-300 300];
 mxny = [-200 200];
@@ -247,7 +262,9 @@ mxnz = [-300 300];
 for iter = 1:size(Markers,1)
     if ~all(any(isnan(Markers(iter,inds,:))))
         if exist('fh','var')
-            %delete(fh)
+            if staystill
+                delete(fh)
+            end
         end
         ys = Markers(iter,inds,2);
         mny = 0; %mean(ys);
@@ -256,6 +273,10 @@ for iter = 1:size(Markers,1)
         zs = Markers(iter,inds,3);
         mnz = mean(zs);
         
+        if staystill
+            mny = mean(ys);
+            mnx = mean(xs);
+        end        
         
         
         
@@ -270,6 +291,8 @@ for iter = 1:size(Markers,1)
         norm_len = 300;
         normal = v(:,end); unormal = normal./norm(normal);
         normal = unormal*.5*norm_len*-sign(unormal(1));
+        
+        norms = [norms unormal];
         
         ph = plot3([0 normal(1)]',[0 normal(2)]',[0 normal(3)]',...
                 'Color',cmap(iter,:),'linewidth',2);       
@@ -305,8 +328,14 @@ for iter = 1:size(Markers,1)
         
         %if iter == 1
         zlabel('z');zlim([-1700 500])
-        ylabel('y');%ylim([-400 400])
-        xlabel('x');%xlim([-400 400])
+        ylabel('y');%
+        xlabel('x');%
+        
+        if staystill
+            ylim([-600 600])
+            xlim([-600 600])
+        end
+        
         %end
         %zlim(mxnz);
         %ylim(mxny);
