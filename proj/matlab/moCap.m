@@ -355,13 +355,15 @@ end
 a = sqrt(sum(norms(1:2,:).^2));
 phi   = atan2(norms(3,:),a);
 theta = atan(norms(2,:)./norms(1,:));
+scl = 180/pi;
+scl = 1;
 
 figure,
 subplot(2,1,1)
-plot(theta./pi*180),title('\theta')
+plot(theta.*scl),title('\theta')
 
 subplot(2,1,2)
-plot(abs(phi/pi*180)),title('\phi')
+plot(abs(phi.*scl)),title('\phi')
 
 
 %% CMU data ( *.amc format)
