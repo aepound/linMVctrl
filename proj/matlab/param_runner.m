@@ -12,3 +12,4 @@ P.C = [0 P.w^2 0 0; 0 0 0 P.w^2];
 
 P.thetad = 0;
 P.phid = -pi/6;
+P.desired = [P.thetad; 0; P.phid; 0];
