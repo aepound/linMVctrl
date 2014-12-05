@@ -253,6 +253,7 @@ figure(1)
 clf(1)
 
 staystill = 1;
+plotarmslegs = 1;
 
 norms = [];
 
@@ -264,6 +265,7 @@ for iter = 1:size(Markers,1)
         if exist('fh','var')
             if staystill
                 delete(fh)
+                axis equal
             end
         end
         ys = Markers(iter,inds,2);
@@ -327,7 +329,7 @@ for iter = 1:size(Markers,1)
         end
         
         %if iter == 1
-        zlabel('z');zlim([-1700 500])
+        zlabel('z');zlim([-1200 500])
         ylabel('y');%
         xlabel('x');%
         
@@ -347,6 +349,50 @@ for iter = 1:size(Markers,1)
         pause(.1)
     end
 end
+
+%%
+
+a = sqrt(sum(norms(1:2,:).^2));
+phi   = atan2(norms(3,:),a);
+theta = atan(norms(2,:)./norms(1,:));
+
+figure,
+subplot(2,1,1)
+plot(theta./pi*180),title('\theta')
+
+subplot(2,1,2)
+plot(abs(phi/pi*180)),title('\phi')
+
+
+%% CMU data ( *.amc format)
+% This has anumber of different subjects with (possibly) numerous datasets
+% for each subject
+
+% Specify a subject: 1 - 5
+subiter = 3;
+% Specify a run/dataset:
+dataset = 3;
+
+subjects = [ 2 9 16 35 58];
+subject = sprintf('%0.2d',subjects(subiter));
+
+datadir = [ '../data/cmu/subjects/' subject ];
+dd = dir([datadir '/*.c3d']); dd(1:3) = [];
+if dataset > length(dd)
+    error('Wrong dataset...')
+end
+
+fname = [datadir filesep dd(dataset).name];
+
+%[M, S] = amc_to_matrix(fname);
+
+[Markers,VideoFrameRate,AnalogSignals,AnalogFrameRate, ...
+    Event,ParameterGroup,CameraInfo,ResidualError]=readc3d(fname);
+
+markerlbls = ParameterGroup.Parameter(9).data;
+
+
+
 
 %%
 
