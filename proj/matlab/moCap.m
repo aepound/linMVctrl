@@ -346,26 +346,30 @@ for iter = 1:size(Markers,1)
 %        mxny = [min(yl(1),mxny(1)), max(yl(2),mxny(2))]; 
 %        mxnz = [min(zl(1),mxnz(1)), max(zl(2),mxnz(2))]; 
         
-        pause(.1)
+        pause(.01)
     end
 end
 
 %%
-
+tt = 0:1/60:504/60;
 a = sqrt(sum(norms(1:2,:).^2));
 phi   = atan2(norms(3,:),a);
 theta = atan(norms(2,:)./norms(1,:));
 scl = 180/pi;
-scl = 1;
+%scl = 1;
 
 figure,
 subplot(2,1,1)
-plot(theta.*scl),title('\theta')
+plot(tt(100:450),theta(100:450).*scl),title('\theta')
+xlabel('time (sec)')
+ylabel('degree (^o)')
+grid on
 
 subplot(2,1,2)
-plot(abs(phi.*scl)),title('\phi')
-
-
+plot(tt(100:450),abs(phi(100:450).*scl)),title('\phi')
+xlabel('time (sec)')
+ylabel('degree (^o)')
+grid on
 %% CMU data ( *.amc format)
 % This has anumber of different subjects with (possibly) numerous datasets
 % for each subject
