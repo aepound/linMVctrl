@@ -1,0 +1,39 @@
+
+      \usetikzlibrary{patterns}
+	\begin{tikzpicture}[domain=0:4]
+   
+      
+      \draw[fill, color=red,pattern=crosshatch,pattern color=red!30] (0,0) -- (0.5, -1) -- (2.5,0) -- (2,1) -- (0,0);
+      \draw[color=red,pattern=crosshatch,pattern color=red!30] (2,1) -- (6,1.5) -- (6.5,0.5) -- (2.5,0);
+      \draw[color=red,pattern=dots,pattern color=red!30] (6.5,0.5) -- (4.5,-.5) -- (0.5,  -1) -- (2.5,0);
+    
+      \draw[color=blue] (4.5,.25) -- (2.5,-.75);
+      \draw[color=blue] (-.5,-.75) -- (3.5,-.25) -- (7,0.25);
+      
+      %\draw[color=green] (2.5,1.75)-- (3,.75) -- (3.5,-.25);
+      \draw[color=blue] (2.5,1.75)-- (3.5,-.25) -- (5.5,-4.25);
+      \draw[color=green,thick,-triangle 60](3.5,-.25) -- (5,-3.25);
+      
+      \draw[color=orange,-triangle 60](3.5,-.25) -- (5,-1.5);
+      
+      \draw[color=gray, thin] (3.5,-.25) -- (3.5,-3);
+      \draw[color=gray, thin] (3.5,-3) -- (5,-1.5)
+      node[pos=.1](endcorn){};
+      \draw[color=gray,thin](3.5,-2.8) -- (3.5,-3) -- (endcorn.center) -- ++ (0,.2)  -- cycle;
+      	
+    
+      \pgfmathsetmacro{\rad}{1.5}
+      % Middle: 76.72
+      % End : 63.44
+      \draw (3.5,-.25) ++(-90:\rad) arc (-90:-63.44:\rad)  node[ below left]{$\alpha$};
+     \draw (3.5,-1.5) arc(-60:-30:1) node [ left]{$\beta$} arc(-30:-2:1);
+           
+      \draw [pattern=crosshatch,pattern color=black!30,rotate around={18:(2.5,-0.375) }] 
+      (2.5,-0.375) ellipse (1.35 and .25);
+      
+      \pgfmathsetmacro{\xell}{4.5}
+      \pgfmathsetmacro{\yell}{-0.1}      
+      \draw [pattern=crosshatch,pattern color=black!30,rotate around={18:(\xell2,\yell2) }] 
+      (\xell2,\yell2) ellipse (1.35 and .25);
+
+\end{tikzpicture}

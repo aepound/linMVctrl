@@ -1,0 +1,18 @@
+\begin{tikzpicture}[domain=0:4]
+%      \draw[very thin,color=gray] (-0.1,-1.1) grid (3.9,3.9);
+      \draw[<->,color=gray,thick] (-2, .5) --(0,0) -- (4,-1) node[below right]{$x$};
+      \draw[<->,color=gray,thick] (0,-1.2) -- (0,2.5) node[above]{$z$};
+      \draw[<-,color=gray,thick] (2.5,1.667) -- (0,0);
+      \draw[->, color=gray,thick] (0,0) -- (-2,-1.33)node[below left]{$y$};
+     
+     	\draw[->,very thick,color=black](0,0) -- (2,2);
+     	\draw[thin,color=black](0,0) -- (2,-1.5) --(2,2);
+
+	\pgfmathsetmacro{\rad}{1.5}
+      % Middle: 76.72
+      % End : 63.44
+      \draw [color=red](0,0) ++(-36.87:\rad) arc (-36.87:-15:\rad)  node[ below ]{$\quad\theta$};
+     \draw [color=blue](0,0) ++(-36.87:.75) arc(-30:2.5:1) node [ right]{$\phi$} arc(2.5:34:1);
+	
+	\node[text width=2cm] at (-2,1.5) {Reference frame is (x,y,z)};
+\end{tikzpicture}
